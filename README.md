@@ -1,29 +1,10 @@
 # echarts-vue
-
-## Project setup
-```
-npm install
-```
-
-### Compiles and hot-reloads for development
-```
-npm run serve
-```
-
-### Compiles and minifies for production
-```
-npm run build
-```
-
-### Run your tests
-```
-npm run test
-```
-
-### Lints and fixes files
-```
-npm run lint
-```
-
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
+> 基于echarts的PC端疫情详情网站，用于学习及熟练echarts与Elements
+### 开发进度
+- `2020.02.17`
+  1. 实现国家疫情地图并分段渲染
+  2. 实现省的下钻功能
+  - 待实现：返回功能、省下钻之后数据渲染
+### 感谢
+- [天行数据](https://www.tianapi.com/apiview/170)
+- 丁香园
