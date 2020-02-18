@@ -23,7 +23,6 @@ export default {
       if (!localStorage.getItem('ncovDataAll')) {
         localStorage.setItem('ncovDataAll', JSON.stringify(res))
       }
-      console.log(res)
     })
   },
   mounted() {
@@ -98,7 +97,6 @@ export default {
       this.myChart.setOption(option)
     },
     _transformNcovData(list, isProvince = true) {
-      console.log(list)
       return list.map(item => {
         return {
           name: isProvince ? item.provinceShortName : item.cityName,

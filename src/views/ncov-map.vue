@@ -80,10 +80,15 @@ export default {
       return this.ncovData[index].cities
     },
     _renderMap(province, data) {
+      if (data.length <= 0) {
+        return
+      }
       // axios.get
       api.getProvinceData(province).then(res => {
         echarts.registerMap(province, res)
-        this.myChart.setOption(buildMapOptions(province, data))
+        const option = buildMapOptions(province, data)
+        this.myChart.setOption(option)
+        console.log(option.series)
         if (province === 'china') {
           this.myChart.on('click', this.clickHandler)
           this.myChart.off('contextmenu', this.contextMenuHandler)
@@ -98,13 +103,12 @@ export default {
       this._renderMap(params.name, this._transformNcovData(data, false))
     },
     contextMenuHandler(params) {
-      console.log(params)
       params.event.event.stopPropagation()
       params.event.event.preventDefault()
-
       this._renderMap('china', this._transformNcovData(this.ncovData))
     },
     _transformNcovData(list, isProvince = true) {
+      console.log(list)
       return list.map(item => {
         const label = {}
         if (item.confirmedCount >= 1000) {
