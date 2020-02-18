@@ -86,8 +86,10 @@ export default {
         this.myChart.setOption(buildMapOptions(province, data))
         if (province === 'china') {
           this.myChart.on('click', this.clickHandler)
+          this.myChart.off('contextmenu', this.contextMenuHandler)
         } else {
           this.myChart.off('click', this.clickHandler)
+          this.myChart.on('contextmenu', this.contextMenuHandler)
         }
       })
     },
@@ -95,9 +97,16 @@ export default {
       const data = this._searchCityNcovData(params.name)
       this._renderMap(params.name, this._transformNcovData(data, false))
     },
+    contextMenuHandler(params) {
+      console.log(params)
+      params.event.event.stopPropagation()
+      params.event.event.preventDefault()
+
+      this._renderMap('china', this._transformNcovData(this.ncovData))
+    },
     _transformNcovData(list, isProvince = true) {
       return list.map(item => {
-        const label = { position: 'inside' }
+        const label = {}
         if (item.confirmedCount >= 1000) {
           label.color = '#fff'
         }
