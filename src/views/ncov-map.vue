@@ -6,6 +6,7 @@ import echarts from 'echarts'
 // import 'echarts/map/js/china.js'
 // import '@/assets/js/data.js'
 import api from '@/api/api.js'
+import { buildMapOptions } from '@/assets/js/map-option.js'
 export default {
   data() {
     return {
@@ -78,78 +79,33 @@ export default {
       )
       return this.ncovData[index].cities
     },
-    _renderMap(mapName, data) {
+    _renderMap(province, data) {
       // axios.get
-      api.getProvinceData(mapName).then(res => {
-        echarts.registerMap(mapName, res)
-        const option = {
-          title: {
-            show: true,
-            text: '疫情累计确诊地图',
-            top: '10%',
-            left: 'center'
-          },
-          tooltip: {
-            trigger: 'item',
-            formatter(params) {
-              return `地区: ${params.name}
-                    <br/>累计确诊: ${params.value}`
-            }
-          },
-          series: [
-            {
-              type: 'map',
-              map: mapName,
-              name: '疫情信息',
-              label: {
-                show: true
-              },
-              data: data
-            }
-          ],
-          visualMap: {
-            // 左下角的颜色区域
-            type: 'piecewise', // 定义为分段型 visualMap
-            min: 0,
-            max: 100000,
-            itemWidth: 40,
-            bottom: 60,
-            left: 20,
-            pieces: [
-              { gt: 9999, label: '>10000', color: '#4F070D' },
-              {
-                gt: 999,
-                lte: 10000,
-                label: '1000-10000',
-                color: '#811C24'
-              },
-              { gt: 499, lte: 999, label: '500-999', color: '#CB2A2F' },
-              { gt: 99, lte: 499, label: '100-499', color: '#CB5A4E' },
-              { gt: 9, lte: 99, label: '10-99', color: '#F59E83' },
-              { gt: 0, lte: 9, label: '1-9', color: '#FDEBCF' }, // (]
-              { value: 0, label: '0', color: '#FFF' } // [0]
-            ]
-          }
-        }
-        if (mapName === 'china') {
+      api.getProvinceData(province).then(res => {
+        echarts.registerMap(province, res)
+        this.myChart.setOption(buildMapOptions(province, data))
+        if (province === 'china') {
           this.myChart.on('click', this.clickHandler)
         } else {
           this.myChart.off('click', this.clickHandler)
         }
-        this.myChart.setOption(option)
       })
     },
     clickHandler(params) {
       const data = this._searchCityNcovData(params.name)
-
       this._renderMap(params.name, this._transformNcovData(data, false))
     },
     _transformNcovData(list, isProvince = true) {
       return list.map(item => {
+        const label = { position: 'inside' }
+        if (item.confirmedCount >= 1000) {
+          label.color = '#fff'
+        }
         return {
           name: isProvince ? item.provinceShortName : item.cityName,
           value: item.confirmedCount,
-          allName: isProvince ? item.provinceName : ''
+          allName: isProvince ? item.provinceName : '',
+          label
         }
       })
     }
