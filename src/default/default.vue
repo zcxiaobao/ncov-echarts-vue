@@ -1,13 +1,15 @@
 <template>
   <div class="layout-default">
     <el-container style="height: 100%; border: 1px solid #eee">
-      <el-header height="80px">111</el-header>
+      <el-header>
+        <ncov-header></ncov-header>
+      </el-header>
       <el-container>
-        <el-aside width="200px" style="background-color: rgb(238, 241, 246)">
+        <!-- <el-aside width="200px" style="background-color: rgb(238, 241, 246)">
           <zc-aside></zc-aside>
-        </el-aside>
+        </el-aside>-->
 
-        <el-main>
+        <el-main class="ncov-main">
           <router-view></router-view>
           <!-- main -->
         </el-main>
@@ -18,10 +20,54 @@
 
 <script>
 import ZcAside from '@/components/aside/zc-aside.vue'
+import NcovHeader from '@/components/header/ncov-header.vue'
+import { mapMutations, mapGetters } from 'vuex'
+import { detailDataList } from '@/assets/js/calcNcovDetailData.js'
+import api from '@/api/api.js'
 export default {
   name: 'Default',
+  created() {
+    this._getNcovData()
+    this._getNcovData(false)
+  },
+  data() {
+    return {
+      ncovDataStr: 'nowNcovData',
+      yesNcovDataStr: 'yesNcovData'
+    }
+  },
+  computed: {
+    ...mapGetters(['ncovData', 'yesNcovData'])
+  },
+  methods: {
+    ...mapMutations({
+      setNcovData: 'SET_NCOV_DATA',
+      setYesNcovData: 'SET_YES_NCOV_DATA',
+      setDetailData: 'SET_NCOV_DETAIL_DATA'
+    }),
+    _getNcovData(isLatest = true) {
+      api.getNcovData(isLatest).then(res => {
+        if (isLatest) {
+          if (!localStorage.getItem(this.ncovDataStr)) {
+            localStorage.setItem(this.ncovDataStr, JSON.stringify(res))
+          }
+          this.setNcovData(res.newslist)
+        } else {
+          if (!localStorage.getItem(this.yesNcovDataStr)) {
+            localStorage.setItem(this.yesNcovDataStr, JSON.stringify(res))
+          }
+          this.setYesNcovData(res.newslist)
+        }
+        if (this.ncovData.length > 0 && this.yesNcovData.length > 0) {
+          const data = detailDataList(this.ncovData, this.yesNcovData)
+          this.setDetailData(data)
+        }
+      })
+    }
+  },
   components: {
-    ZcAside
+    // ZcAside
+    NcovHeader
   }
 }
 </script>
@@ -48,5 +94,8 @@ export default {
   left: 0;
   right: 0;
   bottom: 0;
+}
+.el-main {
+  padding: 20px;
 }
 </style>

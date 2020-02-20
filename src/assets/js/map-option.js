@@ -38,7 +38,7 @@ export const buildMapOptions = function (province, data) {
       max: 100000,
       itemWidth: 40,
       bottom: 60,
-      left: 20,
+      right: 20,
       pieces: buildVisualMap(province)
     }
   }

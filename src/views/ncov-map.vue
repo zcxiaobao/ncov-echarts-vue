@@ -1,16 +1,18 @@
 <template>
-  <div id="chart_example" ref="ncov"></div>
+  <div class="ncov-map-wrapper">
+    <div id="stacked-column" ref="stackedColumn"></div>
+    <div id="ncov-map" ref="ncov"></div>
+  </div>
 </template>
 <script>
 import echarts from 'echarts'
-// import 'echarts/map/js/china.js'
-// import '@/assets/js/data.js'
 import api from '@/api/api.js'
 import { buildMapOptions } from '@/assets/js/map-option.js'
+import { mapGetters, mapMutations } from 'vuex'
+import { buildStackColumnOption } from '@/assets/js/stacked-column-option.js'
 export default {
   data() {
     return {
-      ncovData: [],
       provinces: {
         // 23个省
         台湾: 'taiwan',
@@ -50,28 +52,34 @@ export default {
       }
     }
   },
-  created() {
-    api.getNcovData().then(res => {
-      if (!localStorage.getItem('ncovData')) {
-        localStorage.setItem('ncovData', JSON.stringify(res))
-      }
-      this.ncovData = res.newslist
-    })
-    api.getNcovDataAll().then(res => {
-      if (!localStorage.getItem('ncovDataAll')) {
-        localStorage.setItem('ncovDataAll', JSON.stringify(res))
-      }
-    })
+  computed: {
+    ...mapGetters(['ncovData', 'mapData', 'ncovDetailData'])
   },
+  created() {},
   mounted() {
     setTimeout(() => {
       this._initEcharts()
       this._renderMap('china', this._transformNcovData(this.ncovData))
     }, 20)
   },
+  watch: {
+    ncovData() {
+      setTimeout(() => {
+        this._renderMap('china', this._transformNcovData(this.ncovData))
+      }, 20)
+    },
+    mapData(newMapData) {
+      const option = buildStackColumnOption(newMapData)
+      this.stackedColumn.setOption(option)
+    }
+  },
   methods: {
+    ...mapMutations({
+      setMapData: 'SET_MAP_DATA'
+    }),
     _initEcharts() {
-      this.myChart = echarts.init(this.$refs.ncov)
+      this.ncovMap = echarts.init(this.$refs.ncov)
+      this.stackedColumn = echarts.init(this.$refs.stackedColumn)
     },
     _searchCityNcovData(provinceName) {
       const index = this.ncovData.findIndex(
@@ -87,14 +95,14 @@ export default {
       api.getProvinceData(province).then(res => {
         echarts.registerMap(province, res)
         const option = buildMapOptions(province, data)
-        this.myChart.setOption(option)
-        console.log(option.series)
+        this.setMapData(data)
+        this.ncovMap.setOption(option)
         if (province === 'china') {
-          this.myChart.on('click', this.clickHandler)
-          this.myChart.off('contextmenu', this.contextMenuHandler)
+          this.ncovMap.on('click', this.clickHandler)
+          this.ncovMap.off('contextmenu', this.contextMenuHandler)
         } else {
-          this.myChart.off('click', this.clickHandler)
-          this.myChart.on('contextmenu', this.contextMenuHandler)
+          this.ncovMap.off('click', this.clickHandler)
+          this.ncovMap.on('contextmenu', this.contextMenuHandler)
         }
       })
     },
@@ -108,7 +116,6 @@ export default {
       this._renderMap('china', this._transformNcovData(this.ncovData))
     },
     _transformNcovData(list, isProvince = true) {
-      console.log(list)
       return list.map(item => {
         const label = {}
         if (item.confirmedCount >= 1000) {
@@ -116,7 +123,10 @@ export default {
         }
         return {
           name: isProvince ? item.provinceShortName : item.cityName,
-          value: item.confirmedCount,
+          value: item.confirmedCount, // 累计确诊
+          currentConfirmedCount: item.currentConfirmedCount, // 现存确诊
+          curedCount: item.curedCount, // 治愈
+          deadCount: item.deadCount, // 死亡
           allName: isProvince ? item.provinceName : '',
           label
         }
@@ -127,10 +137,20 @@ export default {
 </script>
 
 <style>
-#chart_example {
+#ncov-map {
   width: 80%;
   height: 800px;
-  border: 1px solid red;
   margin: 0 auto;
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  margin: auto;
+}
+#stacked-column {
+  width: 100%;
+  height: 800px;
+  /* border: 1px solid #f00; */
 }
 </style>

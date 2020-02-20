@@ -1,4 +1,7 @@
 import axios from '@/axios.js'
+import {
+  getDate
+} from '@/assets/js/util.js'
 const provinces = {
   // 23个省
   台湾: 'taiwan',
@@ -37,14 +40,25 @@ const provinces = {
   澳门: 'aomen'
 }
 const api = {
-  getNcovData() {
-    const ncovData = localStorage.getItem('ncovData')
+  getNcovData(isLatest = true) {
+    const dateTime = getDate()
+    let date = ''
+    let ncovDateStorageName = ''
+    if (isLatest) {
+      date = dateTime.today
+      ncovDateStorageName = 'nowNcovData'
+    } else {
+      date = dateTime.yestoday
+      ncovDateStorageName = 'yesNcovData'
+    }
+    const ncovData = localStorage.getItem(ncovDateStorageName)
     if (ncovData) {
       return Promise.resolve(JSON.parse(ncovData))
     }
     return axios.get('http://api.tianapi.com/txapi/ncovcity/index', {
       params: {
-        key: 'e82f86af9a0391032dc487dcce8f6b69'
+        key: 'e82f86af9a0391032dc487dcce8f6b69',
+        date
       }
     })
   },
