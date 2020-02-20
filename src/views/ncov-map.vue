@@ -137,7 +137,14 @@ export default {
 </script>
 
 <style>
-#ncov-map {
+.ncov-map-wrapper {
+  position: absolute;
+  top: 60px;
+  bottom: 0;
+  right: 0;
+  left: 0;
+}
+/*#ncov-map {
   width: 80%;
   height: 800px;
   margin: 0 auto;
@@ -150,7 +157,6 @@ export default {
 }
 #stacked-column {
   width: 100%;
-  height: 800px;
-  /* border: 1px solid #f00; */
-}
+  height: calc(100% - 80px);
+}*/
 </style>

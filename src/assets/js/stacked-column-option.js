@@ -23,15 +23,22 @@ export const buildStackColumnOption = function (mapData) {
     grid: {
       left: '3%',
       right: '4%',
-      bottom: '3%',
+      top: '5%',
+      bottom: '4%',
       containLabel: true
     },
     xAxis: {
-      type: 'value'
+      show: false
     },
     yAxis: {
       type: 'category',
-      data: yAxisData
+      data: yAxisData,
+      axisTick: {
+        show: false
+      },
+      axisLine: { // y轴
+        show: false
+      }
     },
     series: [{
         name: '治愈',

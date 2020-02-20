@@ -15,7 +15,7 @@ const routes = [{
     children: [{
       name: 'NcovMap',
       path: 'ncov-map',
-      component: NcovMap
+      component: NcovMap2
     }, {
       name: 'NcovTable',
       path: 'ncov-table',

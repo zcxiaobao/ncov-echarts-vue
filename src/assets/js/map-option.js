@@ -3,17 +3,24 @@ import {
 } from './map-visualMap'
 export const buildMapOptions = function (province, data) {
   const option = {
-    title: {
-      show: true,
-      text: '疫情累计确诊地图',
-      top: '8%',
-      left: 'center'
-    },
+    // title: {
+    //   show: true,
+    //   text: '疫情累计确诊地图',
+    //   top: '8%',
+    //   left: 'center'
+    // },
     tooltip: {
       trigger: 'item',
       formatter(params) {
+        if (!params.value) {
+          return `地区: ${params.name}
+                  <br/>暂无数据`
+        }
         return `地区: ${params.name}
-              <br/>累计确诊: ${params.value ? params.value : 0}`
+              <br/>累计确诊: ${params.value}
+              <br/>现存确诊: ${params.data.currentConfirmedCount}
+              <br/>累计治愈: ${params.data.curedCount}
+              <br/>累计死亡: ${params.data.deadCount}`
       }
     },
     series: [{

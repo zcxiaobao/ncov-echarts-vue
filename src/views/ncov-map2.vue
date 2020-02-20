@@ -1,10 +1,11 @@
 <template>
   <div class="ncov-map-wrapper">
     <!-- <div id="stacked-column" ref="stackedColumn"></div> -->
+
     <div id="ncov-map" ref="ncov"></div>
   </div>
 </template>
-<script>
+ <script>
 import echarts from 'echarts'
 import api from '@/api/api.js'
 import { buildMapOptions } from '@/assets/js/map-option.js'
@@ -94,15 +95,14 @@ export default {
       // axios.get
       api.getProvinceData(province).then(res => {
         echarts.registerMap(province, res)
-        // this.setMapData(data)
         const option = buildMixin(province, data)
         this.ncovMap.setOption(option)
         if (province === 'china') {
-          this.ncovMap.on('click', 'series.map', this.clickHandler)
-          this.ncovMap.off('contextmenu', 'series.map', this.contextMenuHandler)
+          this.ncovMap.on('click', this.clickHandler)
+          this.ncovMap.off('contextmenu', this.contextMenuHandler)
         } else {
-          this.ncovMap.off('click', 'series.map', this.clickHandler)
-          this.ncovMap.on('contextmenu', 'series.map', this.contextMenuHandler)
+          this.ncovMap.off('click', this.clickHandler)
+          this.ncovMap.on('contextmenu', this.contextMenuHandler)
         }
       })
     },
@@ -135,22 +135,16 @@ export default {
   }
 }
 </script>
-
-<style>
-#ncov-map {
-  width: 80%;
-  height: 800px;
-  margin: 0 auto;
+<style lang="less">
+.ncov-map-wrapper {
   position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
+  top: 60px;
   bottom: 0;
-  margin: auto;
+  right: 0;
+  left: 0;
 }
-#stacked-column {
+#ncov-map {
   width: 100%;
-  height: 800px;
-  /* border: 1px solid #f00; */
+  height: 100%;
 }
 </style>
