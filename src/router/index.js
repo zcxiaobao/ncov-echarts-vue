@@ -5,6 +5,7 @@ import Default from '@/default/default.vue'
 import NcovMap from '@/views/ncov-map.vue'
 import NcovMap2 from '@/views/ncov-map2.vue'
 import NcovTable from '@/views/ncov-table.vue'
+import NcovAllCities from '@/views/ncov-all-cities.vue'
 Vue.use(VueRouter)
 
 const routes = [{
@@ -13,14 +14,20 @@ const routes = [{
     redirect: '/ncov-map',
     component: Default,
     children: [{
-      name: 'NcovMap',
-      path: 'ncov-map',
-      component: NcovMap2
-    }, {
-      name: 'NcovTable',
-      path: 'ncov-table',
-      component: NcovTable
-    }]
+        name: 'NcovMap',
+        path: 'ncov-map',
+        component: NcovMap2
+      }, {
+        name: 'NcovTable',
+        path: 'ncov-table',
+        component: NcovTable
+      },
+      {
+        name: 'NcovAllCities',
+        path: 'ncov-map-all-city',
+        component: NcovAllCities
+      }
+    ]
   }
   // {
   //   path: '/about',

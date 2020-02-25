@@ -12,6 +12,8 @@ import { buildMapOptions } from '@/assets/js/map-option.js'
 import { mapGetters, mapMutations } from 'vuex'
 import { buildStackColumnOption } from '@/assets/js/stacked-column-option.js'
 import { buildMixin } from '@/assets/js/mixin-option.js'
+
+let ncovMap = null
 export default {
   data() {
     return {
@@ -61,6 +63,7 @@ export default {
   mounted() {
     setTimeout(() => {
       this._initEcharts()
+      this._renderMap('china', this._transformNcovData(this.ncovData))
     }, 20)
   },
   watch: {
@@ -79,7 +82,7 @@ export default {
       setMapData: 'SET_MAP_DATA'
     }),
     _initEcharts() {
-      this.ncovMap = echarts.init(this.$refs.ncov)
+      ncovMap = echarts.init(this.$refs.ncov)
       // this.stackedColumn = echarts.init(this.$refs.stackedColumn)
     },
     _searchCityNcovData(provinceName) {
@@ -96,13 +99,13 @@ export default {
       api.getProvinceData(province).then(res => {
         echarts.registerMap(province, res)
         const option = buildMixin(province, data)
-        this.ncovMap.setOption(option)
+        ncovMap.setOption(option)
         if (province === 'china') {
-          this.ncovMap.on('click', this.clickHandler)
-          this.ncovMap.off('contextmenu', this.contextMenuHandler)
+          ncovMap.on('click', this.clickHandler)
+          ncovMap.off('contextmenu', this.contextMenuHandler)
         } else {
-          this.ncovMap.off('click', this.clickHandler)
-          this.ncovMap.on('contextmenu', this.contextMenuHandler)
+          ncovMap.off('click', this.clickHandler)
+          ncovMap.on('contextmenu', this.contextMenuHandler)
         }
       })
     },

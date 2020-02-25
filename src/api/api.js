@@ -77,9 +77,22 @@ const api = {
     if (province !== 'china') {
       return axios.get(`/json/province/${provinces[province]}.json`)
     } else {
-      // F:\duyiSpace\vue\echarts-vue\src\assets\common\map\json\china.json
       return axios.get('/json/china.json')
     }
+  },
+  getAllCitiesData() {
+    const allCities = localStorage.getItem('allCities')
+    if (allCities) {
+      return Promise.resolve(JSON.parse(allCities))
+    }
+    return axios.get('/json/china-cities.json')
+  },
+  getByDateJson() {
+    const byDate = localStorage.getItem('byDate')
+    if (byDate) {
+      return Promise.resolve(JSON.parse(byDate))
+    }
+    return axios.get('json/by_date.json')
   }
 }
 export default api
