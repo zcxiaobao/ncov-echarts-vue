@@ -6,6 +6,7 @@ import NcovMap from '@/views/ncov-map.vue'
 import NcovMap2 from '@/views/ncov-map2.vue'
 import NcovTable from '@/views/ncov-table.vue'
 import NcovAllCities from '@/views/ncov-all-cities.vue'
+import NcovWorldMap from '@/views/ncov-world-map.vue'
 Vue.use(VueRouter)
 
 const routes = [{
@@ -26,6 +27,11 @@ const routes = [{
         name: 'NcovAllCities',
         path: 'ncov-map-all-city',
         component: NcovAllCities
+      },
+      {
+        name: 'NcovWorldMap',
+        path: 'ncov-world-map',
+        component: NcovWorldMap
       }
     ]
   }

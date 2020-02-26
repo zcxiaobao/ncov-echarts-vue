@@ -74,10 +74,13 @@ const api = {
     })
   },
   getProvinceData(province) {
-    if (province !== 'china') {
-      return axios.get(`/json/province/${provinces[province]}.json`)
+    console.log(province)
+    if (province === 'china') {
+      return axios.get('json/china.json')
+    } else if (province === 'world') {
+      return axios.get('json/world.json')
     } else {
-      return axios.get('/json/china.json')
+      return axios.get(`json/province/${provinces[province]}.json`)
     }
   },
   getAllCitiesData() {
@@ -85,7 +88,7 @@ const api = {
     if (allCities) {
       return Promise.resolve(JSON.parse(allCities))
     }
-    return axios.get('/json/china-cities.json')
+    return axios.get('json/china-cities.json')
   },
   getByDateJson() {
     const byDate = localStorage.getItem('byDate')
@@ -93,6 +96,13 @@ const api = {
       return Promise.resolve(JSON.parse(byDate))
     }
     return axios.get('json/by_date.json')
+  },
+  getAreaData() {
+    const byCountry = localStorage.getItem('byCountry')
+    if (byCountry) {
+      return Promise.resolve(JSON.parse(byCountry))
+    }
+    return axios.get('json/by_country.json')
   }
 }
 export default api

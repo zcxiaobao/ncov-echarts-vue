@@ -15,7 +15,7 @@ const HandleDirectCity = function (data) {
 }
 export const buildAllCitiesOption = function (province, data) {
   const recordData = HandleDirectCity(data)
-  console.log(recordData)
+  // console.log(recordData)
   const option = {
     baseOption: {
       timeline: {

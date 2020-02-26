@@ -10,7 +10,7 @@ export const buildMixin = function (province, data) {
   const currentConfirmedData = []
 
   data.sort((a, b) => a.value < b.value ? -1 : 1)
-  console.log(data)
+  // console.log(data)
   data.forEach(city => {
     yAxisData.push(city.name)
     curdData.push(Math.abs(city.curedCount))

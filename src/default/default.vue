@@ -43,7 +43,8 @@ export default {
     ...mapMutations({
       setNcovData: 'SET_NCOV_DATA',
       setYesNcovData: 'SET_YES_NCOV_DATA',
-      setDetailData: 'SET_NCOV_DETAIL_DATA'
+      setDetailData: 'SET_NCOV_DETAIL_DATA',
+      setNewRegion: 'SET_NOW_REGION'
     }),
     _getNcovData(isLatest = true) {
       api.getNcovData(isLatest).then(res => {
@@ -61,6 +62,7 @@ export default {
         if (this.ncovData.length > 0 && this.yesNcovData.length > 0) {
           const data = detailDataList(this.ncovData, this.yesNcovData)
           this.setDetailData(data)
+          this.setNewRegion = '中国'
         }
       })
     }
@@ -96,6 +98,6 @@ export default {
   bottom: 0;
 }
 .el-main {
-  padding: 20px;
+  // padding: 20px;
 }
 </style>
