@@ -99,19 +99,19 @@ export default {
     }
   },
   created() {
-    this.setArea('中国')
+    this.setNowRegion('中国')
   },
   mounted() {
     if (this.newGegion && this.ncovDetailData) {
-      this.regionDetailData = this.ncovDetailData[this.area]
+      this.regionDetailData = this.ncovDetailData[this.nowRegion]
     }
   },
   computed: {
-    ...mapGetters(['ncovData', 'ncovDetailData', 'area'])
+    ...mapGetters(['ncovData', 'ncovDetailData', 'nowRegion'])
   },
   methods: {
     ...mapMutations({
-      setArea: 'SET_AREA'
+      setNowRegion: 'SET_NOW_REGION'
     }),
     rowKeyId(row) {
       return row.provinceShortName || row.cityName
@@ -124,9 +124,9 @@ export default {
           } else {
           }
         })
-        this.setArea(row.provinceShortName)
+        this.setNowRegion(row.provinceShortName)
       } else {
-        this.setArea('中国')
+        this.setNowRegion('中国')
       }
     },
     formatTableShow(row, column, cellValue) {
@@ -135,9 +135,9 @@ export default {
   },
   watch: {
     ncovDetailData(newData) {
-      this.regionDetailData = newData[this.area]
+      this.regionDetailData = newData[this.nowRegion]
     },
-    area(newGegion) {
+    nowRegion(newGegion) {
       this.regionDetailData = this.ncovDetailData[newGegion]
     }
   },

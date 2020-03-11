@@ -1,6 +1,6 @@
 export const SET_NCOV_DATA = 'SET_NCOV_DATA'
 export const SET_YES_NCOV_DATA = 'SET_YES_NCOV_DATA'
 export const SET_MAP_DATA = 'SET_MAP_DATA'
-export const SET_NOW_REGION = 'SET_NOW_REGION'
+export const SET_AREA = 'SET_AREA'
 export const SET_IS_PROVINCE = 'SET_IS_PROVINCE'
 export const SET_NCOV_DETAIL_DATA = 'SET_NCOV_DETAIL_DATA'

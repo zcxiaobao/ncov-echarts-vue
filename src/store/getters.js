@@ -36,9 +36,9 @@ export const ncovData = state => {
   })
 }
 
-export const ncovDetailData = (state) => state.ncovDetailData
+export const ncovDetailData = state => state.ncovDetailData
 export const mapData = state => state.mapData
-export const nowRegion = state => state.nowRegion
+export const area = state => state.area
 export const isProvince = state => state.isProvince
 // export const ncovData = state => state.ncovData
 export const yesNcovData = state => state.yesNcovData

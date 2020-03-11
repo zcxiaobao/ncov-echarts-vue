@@ -49,7 +49,6 @@ export default {
         return
       }
       api.getProvinceData(world).then(res => {
-        console.log(res)
         echarts.registerMap(world, res)
         const option = buildWorldMapOption(world, data)
         ncovMap.setOption(option)

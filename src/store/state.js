@@ -3,7 +3,10 @@ const state = {
   ncovData: [],
   mapData: [],
   isProvince: false,
-  nowRegion: '中国',
+  area: {
+    name: '中国',
+    locationId: 100000
+  },
   ncovDetailData: []
 }
 export default state

@@ -38,7 +38,6 @@ export default {
         return
       }
       api.getAllCitiesData().then(mapJson => {
-        localStorage.setItem('allCities', JSON.stringify(mapJson))
         echarts.registerMap(province, mapJson)
         const option = buildAllCitiesOption(province, data)
         // this.setMapData(data)

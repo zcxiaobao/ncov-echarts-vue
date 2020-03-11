@@ -12,8 +12,8 @@ const mutations = {
   [types.SET_IS_PROVINCE](state, isProvince) {
     state.isProvince = isProvince
   },
-  [types.SET_NOW_REGION](state, nowRegion) {
-    state.nowRegion = nowRegion
+  [types.SET_AREA](state, area) {
+    state.area = area
   },
   [types.SET_NCOV_DETAIL_DATA](state, ncovDetailData) {
     state.ncovDetailData = ncovDetailData

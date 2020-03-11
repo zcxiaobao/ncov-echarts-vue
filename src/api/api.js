@@ -1,9 +1,8 @@
 import axios from '@/axios.js'
-import {
-  getDate
-} from '@/assets/js/util.js'
+import { getDate } from '@/assets/js/util.js'
 const provinces = {
   // 23个省
+  中国: 'china',
   台湾: 'taiwan',
   河北: 'hebei',
   山西: 'shanxi',
@@ -75,7 +74,7 @@ const api = {
   },
   getProvinceData(province) {
     console.log(province)
-    if (province === 'china') {
+    if (province === '中国') {
       return axios.get('json/china.json')
     } else if (province === 'world') {
       return axios.get('json/world.json')
