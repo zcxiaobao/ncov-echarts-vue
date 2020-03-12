@@ -1,85 +1,124 @@
 <template>
   <div class="ncov-map-wrapper">
+    <tab :tabs="tabs" :activeTab="activeTab" @tab-toggle="tabToggle"></tab>
     <div id="ncov-map" ref="ncov"></div>
-    <div class="loading-container" v-show="!ncovWorldData.length">
-      <loading title="地图加载中" />
-    </div>
   </div>
 </template>
  <script>
 import echarts from 'echarts'
 import api from '@/api/api.js'
+import Tab from '@/components/tab/tab'
 import { buildMapOptions } from '@/assets/js/map-option.js'
 import { buildWorldMapOption } from '@/assets/js/map-world-option.js'
+import { otherArea } from '@/assets/js/config'
 import Loading from '@/components/loading/loading.vue'
 
 let ncovMap = null
 export default {
   data() {
     return {
-      region: 'world',
+      tabs: [
+        { label: '世界', name: 'world' },
+        { label: '意大利', name: 'italy' },
+        { label: '伊朗', name: 'iran' },
+        { label: '韩国', name: 'korea' },
+        { label: '日本', name: 'japan' }
+        // { label: '中国', name: 'china' }
+      ],
+      activeTab: 'world',
       ncovWorldData: []
     }
   },
   created() {
-    api.getAreaData().then(res => {
-      this.ncovWorldData = res
+    api.getAreaData().then(({ areaTree }) => {
+      this.ncovWorldData = areaTree
+    })
+    api.getAreaMapData('iran').then(({ features }) => {
+      console.log(features)
+      const names = features.map(city => city.properties.name)
+      console.log(names)
     })
   },
   watch: {
     ncovWorldData(newWorldData) {
       setTimeout(() => {
-        this._initEcharts()
-        this._renderMap('world', this._transformNcovData(this.ncovWorldData))
+        this._renderMap(
+          'world',
+          this._transformNcovData(this.ncovWorldData, 'world')
+        )
       }, 20)
+    },
+    activeTab(newActiveTab) {
+      this._renderMap(
+        newActiveTab,
+        this._transformNcovData(this.ncovWorldData, newActiveTab)
+      )
     }
   },
   mounted() {
     setTimeout(() => {
       this._initEcharts()
-      this._renderMap('world', this._transformNcovData(this.ncovWorldData))
+      ncovMap.showLoading()
     }, 20)
   },
   methods: {
+    tabToggle(tab) {
+      this.activeTab = tab.name
+    },
     _initEcharts() {
       ncovMap = echarts.init(this.$refs.ncov)
     },
-    _renderMap(world, data) {
+    _renderMap(area, data) {
       if (data.length <= 0) {
         return
       }
-      api.getProvinceData(world).then(res => {
-        echarts.registerMap(world, res)
-        const option = buildWorldMapOption(world, data)
+      api.getAreaMapData(area).then(res => {
+        echarts.registerMap(area, res)
+        const option = buildWorldMapOption(area, data)
         ncovMap.setOption(option)
+        ncovMap.hideLoading()
       })
     },
-    _transformNcovData(list) {
+    _transformNcovData(list, area) {
+      if (area === otherArea.world) {
+        return this._normallizaData(list)
+      } else {
+        const label = this.tabs[this.tabs.findIndex(tab => tab.name === area)]
+          .label
+        const index = list.findIndex(country => country.name === label)
+        return this._normallizaData(list[index].children)
+      }
+    },
+    _normallizaData(list) {
       return list.map(item => {
         const label = {}
-        if (item.confirmedCount >= 0) {
-          if (item.confirmedCount >= 1000) {
+        if (item.total.confirm >= 0) {
+          if (item.total.confirm >= 1000) {
             label.color = '#fff'
+            label.show = true
           }
-          label.show = true
+          if (otherArea.world !== this.activeTab) {
+            label.show = true
+          }
         }
         return {
-          name: item.enName,
-          value: item.confirmedCount, // 累计确诊
-          currentConfirmedCount: item.currentConfirmedCount, // 现存确诊
-          curedCount: item.curedCount, // 治愈
-          deadCount: item.deadCount, // 死亡
+          name: item.name,
+          value: item.total.confirm, // 累计确诊
+          currentConfirmedCount:
+            item.total.confirm - item.total.heal - item.total.dead, // 现存确诊
+          curedCount: item.total.heal, // 治愈
+          deadCount: item.total.dead, // 死亡
           label
         }
       })
     }
   },
   components: {
-    Loading
+    Tab
   }
 }
 </script>
-<style lang="less">
+<style lang="less" scoped>
 .ncov-map-wrapper {
   position: absolute;
   top: 60px;
@@ -88,13 +127,9 @@ export default {
   left: 0;
 }
 #ncov-map {
-  width: 100%;
-  height: 100%;
-}
-.loading-container {
   position: absolute;
-  top: 50%;
-  transform: translate3d(0, -50%, 0);
+  top: 48px;
   width: 100%;
+  bottom: 0;
 }
 </style>

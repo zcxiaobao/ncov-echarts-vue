@@ -136,7 +136,7 @@ export default {
 }
 </script>
 
-<style>
+<style lang="less" scoped>
 .ncov-map-wrapper {
   position: absolute;
   top: 60px;

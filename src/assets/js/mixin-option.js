@@ -161,62 +161,6 @@ export const buildMixin = function(area, data, isTotal = true) {
         data
       },
       ...buildBarSeries(isTotal, curdData, deadData, currentConfirmedData)
-      // {
-      //   name: '治愈',
-      //   type: 'bar',
-      //   stack: '人数',
-      //   color: 'rgb(64,141,39)',
-      //   label: {
-      //     show: true,
-      //     position: 'inside',
-      //     formatter: function(params) {
-      //       if (params.value > 0) {
-      //         return params.value
-      //       } else {
-      //         return ''
-      //       }
-      //     }
-      //   },
-      //   data: curdData
-      // },
-      // {
-      //   name: '死亡',
-      //   type: 'bar',
-      //   stack: '人数',
-      //   color: 'gray',
-      //   label: {
-      //     show: true,
-      //     position: 'inside',
-      //     formatter: function(params) {
-      //       if (params.value > 0) {
-      //         return params.value
-      //       } else {
-      //         return ''
-      //       }
-      //     }
-      //   },
-      //   data: deadData
-      // },
-      // {
-      //   name: '治疗',
-      //   type: 'bar',
-      //   stack: '人数',
-      //   color: 'rgb(224,144,115)',
-      //   label: {
-      //     show: true,
-      //     position: 'inside',
-      //     formatter: function(params) {
-      //       if (params.value > 0) {
-      //         return params.value
-      //       } else {
-      //         return ''
-      //       }
-      //     }
-      //   },
-
-      //   data: currentConfirmedData,
-      //   barMaxWidth: '30'
-      // }
     ],
     visualMap: [
       {
@@ -233,6 +177,5 @@ export const buildMixin = function(area, data, isTotal = true) {
       }
     ]
   }
-  console.log(option)
   return option
 }

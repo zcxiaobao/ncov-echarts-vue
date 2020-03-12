@@ -1,14 +1,8 @@
-import {
-  buildVisualMap
-} from './map-visualMap'
-export const buildWorldMapOption = function (region, data) {
+import { buildVisualMap } from './map-visualMap'
+import { countryNameMap } from './country'
+import { otherArea } from './config'
+export const buildWorldMapOption = function(region, data) {
   const option = {
-    // title: {
-    //   show: true,
-    //   text: '疫情累计确诊地图',
-    //   top: '8%',
-    //   left: 'center'
-    // },
     tooltip: {
       trigger: 'item',
       formatter(params) {
@@ -23,19 +17,22 @@ export const buildWorldMapOption = function (region, data) {
                 <br/>累计死亡: ${params.data.deadCount}`
       }
     },
-    series: [{
-      type: 'map',
-      map: region,
-      name: '累计确诊',
-      label: {
-        normal: {
-          show: false,
-          position: 'inside',
-          align: 'center'
-        }
-      },
-      data
-    }],
+    series: [
+      {
+        type: 'map',
+        map: region,
+        name: '累计确诊',
+        nameMap: countryNameMap[region],
+        label: {
+          normal: {
+            show: false,
+            position: 'inside',
+            align: 'center'
+          }
+        },
+        data
+      }
+    ],
     visualMap: {
       // 左下角的颜色区域
       type: 'piecewise', // 定义为分段型 visualMap

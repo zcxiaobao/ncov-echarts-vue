@@ -82,6 +82,9 @@ const api = {
       return axios.get(`json/province/${provinces[province]}.json`)
     }
   },
+  getAreaMapData(area) {
+    return axios.get(`json/${area}.json`)
+  },
   getAllCitiesData() {
     const allCities = localStorage.getItem('allCities')
     if (allCities) {
@@ -101,7 +104,7 @@ const api = {
     if (byCountry) {
       return Promise.resolve(JSON.parse(byCountry))
     }
-    return axios.get('json/by_country.json')
+    return axios.get('json/data/world-area.json')
   }
 }
 export default api

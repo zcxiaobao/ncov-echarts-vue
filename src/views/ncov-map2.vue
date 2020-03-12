@@ -1,6 +1,7 @@
 <template>
   <div class="ncov-map-wrapper">
-    <el-tabs v-model="activeTab" type="card" @tab-click="handleClick" class="ncov-tab">
+    <tab :activeTab="activeTab" @tab-toggle="tabToggle" :tabs="tabs"></tab>
+    <!-- <el-tabs v-model="activeTab" type="card" @tab-click="handleClick" class="ncov-tab">
       <el-tab-pane
         v-for="tab in tabs"
         :key="tab.label"
@@ -9,12 +10,13 @@
         class="tab-item"
         :class="activeTab === tab.name? 'active': ''"
       ></el-tab-pane>
-    </el-tabs>
+    </el-tabs>-->
     <div id="ncov-map" ref="ncov"></div>
   </div>
 </template>
  <script>
 import echarts from 'echarts'
+import Tab from '@/components/tab/tab'
 import api from '@/api/api.js'
 import { buildMapOptions } from '@/assets/js/map-option.js'
 import { mapGetters, mapMutations, mapActions } from 'vuex'
@@ -42,7 +44,10 @@ export default {
       return this.activeTab === 'total'
     }
   },
-  created() {},
+  created() {
+    console.log(this.area)
+    console.log(this.isProvince)
+  },
   mounted() {
     setTimeout(() => {
       this._initEcharts()
@@ -74,7 +79,7 @@ export default {
       setArea: 'SET_AREA',
       setIsProvince: 'SET_IS_PROVINCE'
     }),
-    handleClick(tab, event) {
+    tabToggle(tab) {
       this.activeTab = tab.name
     },
     _initEcharts() {
@@ -124,7 +129,6 @@ export default {
         area: this.chinaArea,
         isProvince: false
       })
-      // this.setArea(this.chinaArea)
       this._renderMap(this.area, this._transformNcovData(this._getMapData()))
     },
     _transformNcovData(list, isProvince = true) {
@@ -151,10 +155,13 @@ export default {
         }
       })
     }
+  },
+  components: {
+    Tab
   }
 }
 </script>
-<style lang="less">
+<style lang="less"  scoped>
 .ncov-map-wrapper {
   position: absolute;
   top: 60px;
@@ -166,7 +173,7 @@ export default {
     top: 5px;
     left: 50%;
     transform: translate3d(-50%, 0, 0);
-    .el-tabs__item {
+    /deep/ .el-tabs__item {
       color: #666;
       height: 36px;
       line-height: 36px;
@@ -182,8 +189,8 @@ export default {
 }
 #ncov-map {
   position: absolute;
-  top: 40px;
+  top: 48px;
   width: 100%;
-  height: 100%;
+  bottom: 0;
 }
 </style>
