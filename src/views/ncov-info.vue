@@ -1,58 +1,91 @@
 <template>
-  <div class="wrapper">
-    <el-row class="ncov-table">
-      <el-row type="flex" justify="center" class="ncov-detail-wrapper">
-        <el-col :span="16" class="ncov-detail" v-show="ncovDetailData && ncovDetailData.length">
-          <el-row type="flex" justify="space-around">
-            <el-col :span="4">
-              <el-card :body-style="{ padding: '10px' }" shadow="never">
-                <div class="detail-title">现有确诊</div>
-                <div
-                  class="detail-number now-confirm"
-                >{{regionDetailData.now.currentConfirmedCount}}</div>
-                <div class="detail-trend">
-                  昨日
-                  <span class="now-confirm">{{regionDetailData.trend.currentConfirmedCount}}</span>
-                </div>
-              </el-card>
+  <el-row class="ncov-info">
+    <div class="info-detail">
+      <el-tabs v-model="activeInfo" type="card" @tab-click="infoTabToggle">
+        <el-tab-pane label="全国疫情数据(含港澳台)" name="china">
+          <el-row type="flex" class="row-bg" justify="center">
+            <el-col :span="8">
+              <data-detail title="累计确诊" :data="chinaInfo.confirm" clsType="confirm"></data-detail>
             </el-col>
-            <el-col :span="4">
-              <el-card :body-style="{ padding: '10px' }" shadow="never">
-                <div class="detail-title">累计确诊</div>
-                <div class="detail-number total-confirm">{{regionDetailData.now.confirmedCount}}</div>
-                <div class="detail-trend">
-                  昨日
-                  <span class="total-confirm">{{regionDetailData.trend.confirmedCount}}</span>
-                </div>
-              </el-card>
+            <el-col :span="8">
+              <data-detail title="累计死亡" :data="chinaInfo.dead" clsType="dead"></data-detail>
             </el-col>
-            <el-col :span="4">
-              <el-card :body-style="{ padding: '10px' }" shadow="never">
-                <div class="detail-title">累计治愈</div>
-                <div class="detail-number total-curd">{{regionDetailData.now.curedCount}}</div>
-                <div class="detail-trend">
-                  昨日
-                  <span class="total-curd">{{regionDetailData.trend.curedCount}}</span>
-                </div>
-              </el-card>
-            </el-col>
-            <el-col :span="4">
-              <el-card :body-style="{ padding: '10px' }" shadow="never">
-                <div class="detail-title">累计死亡</div>
-                <div class="detail-number total-dead">{{regionDetailData.now.deadCount}}</div>
-                <div class="detail-trend">
-                  昨日
-                  <span class="total-dead">{{regionDetailData.trend.deadCount}}</span>
-                </div>
-              </el-card>
+            <el-col :span="8">
+              <data-detail title="累计治愈" :data="chinaInfo.heal" :isNeedBorder="false" clsType="heal"></data-detail>
             </el-col>
           </el-row>
-        </el-col>
-        <div class="loading-container" v-show="!ncovDetailData || !ncovDetailData.length">
-          <loading />
-        </div>
-      </el-row>
-      <el-row class="table-wrapper">
+          <el-row type="flex" class="row-bg" justify="center">
+            <el-col :span="8">
+              <data-detail title="现有确诊" :data="chinaInfo.current" clsType="current"></data-detail>
+            </el-col>
+            <el-col :span="8">
+              <data-detail title="现有重症" :data="chinaInfo.severe" clsType="suspect"></data-detail>
+            </el-col>
+            <el-col :span="8">
+              <data-detail
+                title="现有疑似"
+                :data="chinaInfo.suspect"
+                :isNeedBorder="false"
+                clsType="severe"
+              ></data-detail>
+            </el-col>
+          </el-row>
+        </el-tab-pane>
+        <el-tab-pane label="疫情数据" name="local">山东</el-tab-pane>
+      </el-tabs>
+    </div>
+    <div class="china-map-wrap">
+      <div class="map-title">中国疫情</div>
+      <tab :activeTab="activeMapTab" @tab-toggle="mapTabToggle" :tabs="mapTabs" class="tab-wrap"></tab>
+      <div class="china-map" id="china-map" ref="chinaMap"></div>
+    </div>
+    <!-- <el-row type="flex" justify="center" class="ncov-detail-wrapper">
+      <el-col :span="16" class="ncov-detail">
+        <el-row type="flex" justify="space-around">
+          <el-col :span="4">
+            <el-card :body-style="{ padding: '10px' }" shadow="never">
+              <div class="detail-title">现有确诊</div>
+              <div class="detail-number now-confirm">-</div>
+              <div class="detail-trend">
+                昨日
+                <span class="now-confirm"></span>
+              </div>
+            </el-card>
+          </el-col>%%
+          <el-col :span="4">
+            <el-card :body-style="{ padding: '10px' }" shadow="never">
+              <div class="detail-title">累计确诊</div>
+              <div class="detail-number total-confirm">-</div>
+              <div class="detail-trend">
+                昨日
+                <span class="total-confirm"></span>
+              </div>
+            </el-card>
+          </el-col>
+          <el-col :span="4">
+            <el-card :body-style="{ padding: '10px' }" shadow="never">
+              <div class="detail-title">累计治愈</div>
+              <div class="detail-number total-curd">-</div>
+              <div class="detail-trend">
+                昨日
+                <span class="total-curd"></span>
+              </div>
+            </el-card>
+          </el-col>
+          <el-col :span="4">
+            <el-card :body-style="{ padding: '10px' }" shadow="never">
+              <div class="detail-title">累计死亡</div>
+              <div class="detail-number total-dead">-</div>
+              <div class="detail-trend">
+                昨日
+                <span class="total-dead"></span>
+              </div>
+            </el-card>
+          </el-col>
+        </el-row>
+      </el-col>
+    </el-row>-->
+    <!-- <el-row class="table-wrapper">
         <el-table
           ref="ncovTable"
           v-show="ncovData.length"
@@ -84,139 +117,213 @@
         <div class="loading-container" v-show="!ncovData.length">
           <loading />
         </div>
-      </el-row>
-    </el-row>
-  </div>
+    </el-row>-->
+  </el-row>
+  <!-- </div> -->
 </template>
 
 <script>
 import { mapGetters, mapMutations } from 'vuex'
 import Loading from '@/components/loading/loading.vue'
+import Tab from '@/components/tab/tab'
+import DataDetail from '@/components/data-detail/data-detail'
+import api from '@/api/api.js'
+import echarts from 'echarts'
+import { dataDetailEnum } from '@/assets/js/config'
+import { buildMapOptions } from '@/assets/js/map-option.js'
+
+let map = ''
 export default {
   data() {
     return {
-      regionDetailData: null
+      chinaInfo: {
+        confirm: { total: '-', today: '-' },
+        suspect: { total: '-', today: '-' },
+        heal: { total: '-', today: '-' },
+        dead: { total: '-', today: '-' },
+        current: { total: '-', today: '-' },
+        severe: { total: '-', today: '-' }
+      },
+      activeInfo: 'china',
+      chinaMapData: [],
+      mapTabs: [
+        { label: '累计确诊', name: 'total' },
+        { label: '现存确诊', name: 'now' }
+      ],
+      activeMapTab: 'total'
     }
   },
   created() {
-    this.setNowRegion('中国')
+    this._getChinaTotalData()
   },
   mounted() {
-    if (this.newGegion && this.ncovDetailData) {
-      this.regionDetailData = this.ncovDetailData[this.nowRegion]
-    }
+    setTimeout(() => {
+      this._initMap()
+    }, 20)
   },
-  computed: {
-    ...mapGetters(['ncovData', 'ncovDetailData', 'nowRegion'])
-  },
+  computed: {},
   methods: {
-    ...mapMutations({
-      setNowRegion: 'SET_NOW_REGION'
-    }),
-    rowKeyId(row) {
-      return row.provinceShortName || row.cityName
+    mapTabToggle(tab) {
+      this.activeMapTab = tab.name
     },
-    expandChange(row, expands) {
-      if (expands) {
-        this.$refs.ncovTable.data.forEach(r => {
-          if (row.locationId !== r.locationId) {
-            this.$refs.ncovTable.toggleRowExpansion(r, false)
-          } else {
-          }
-        })
-        this.setNowRegion(row.provinceShortName)
-      } else {
-        this.setNowRegion('中国')
+    infoTabToggle(tab) {
+      this.activeInfo = tab.name
+    },
+    _initMap() {
+      map = echarts.init(this.$refs.chinaMap, 'light')
+    },
+    _getChinaTotalData() {
+      api.getChinaTotalData().then(({ data }) => {
+        this._normallizeData(data.chinaTotal)
+        const chinaIndex = data.areaTree.findIndex(area => area.name === '中国')
+        this.chinaMapData =
+          chinaIndex !== -1 ? data.areaTree[chinaIndex].children : []
+      })
+    },
+    _renderMap(area, mapData) {
+      if (mapData.length <= 0) {
+        return
       }
+      // map.showLoading()
+      api.getAreaMapData(area).then(mapJson => {
+        echarts.registerMap(area, mapJson)
+        const option = buildMapOptions(area, mapData)
+        map.setOption(option)
+        // map.hideLoading()
+      })
     },
-    formatTableShow(row, column, cellValue) {
-      return cellValue > 0 ? cellValue : ''
+    _normallizeData({ today, total }) {
+      const res = []
+      Object.keys(dataDetailEnum).forEach(d => {
+        let tmp = {}
+
+        tmp =
+          d === 'current'
+            ? {
+                total: total.confirm - total.dead - total.heal,
+                today: (today.storeConfirm > 0 ? '+' : '') + today.storeConfirm
+              }
+            : {
+                total: total[d],
+                today: (today[d] > 0 ? '+' : '') + today[d]
+              }
+        this.$set(this.chinaInfo, d, tmp)
+      })
+      return res
+    },
+    _transformChinaMapData(list) {
+      return list.map(area => {
+        const { confirm, heal, dead } = area.total
+        const current = confirm - heal - dead
+        return {
+          name: area.name,
+          value: this.activeMapTab === 'total' ? confirm : current,
+          confirm,
+          heal,
+          dead,
+          current
+        }
+      })
     }
   },
   watch: {
-    ncovDetailData(newData) {
-      this.regionDetailData = newData[this.nowRegion]
+    chinaMapData(newMapData) {
+      this._renderMap('china', this._transformChinaMapData(newMapData))
     },
-    nowRegion(newGegion) {
-      this.regionDetailData = this.ncovDetailData[newGegion]
+    activeMapTab(newMapTab, oldMapTab) {
+      if (newMapTab === oldMapTab) {
+        return
+      }
+      setTimeout(() => {
+        map.clear()
+        this._renderMap('china', this._transformChinaMapData(this.chinaMapData))
+      }, 20)
     }
   },
   components: {
-    Loading
+    DataDetail,
+    Tab
   }
 }
 </script>
 
 <style lang='less' scoped>
-.wrapper {
-  width: 100%;
+.ncov-info {
+  position: absolute;
+  width: 750px;
+  left: 50%;
+  transform: translate3d(-50%, 0, 0);
+  min-width: 750px;
+  padding: 20px;
   box-sizing: border-box;
-  background-color: #10aeb5;
-  .ncov-table {
-    width: 960px;
-    margin: 0 auto;
-    background-color: #eee;
-    min-width: 960px;
-    box-sizing: border-box;
-    padding: 20px;
-    .ncov-detail-wrapper {
-      margin-bottom: 12px;
-      .ncov-detail {
-        padding: 12px;
-        text-align: center;
-        background-color: #fff;
-        .detail-title {
-          font-size: 14px;
-          height: 14px;
-          line-height: 14px;
-          margin-bottom: 8px;
-          color: #333;
-        }
-        .detail-number {
-          font-size: 20px;
-          height: 20px;
-          line-height: 20px;
-          color: #ff6a57;
-        }
-        .detail-trend {
-          font-size: 10px;
-          height: 10px;
-          line-height: 10px;
-          margin-top: 4px;
-          color: #999;
-        }
-        .now-confirm {
-          color: #ff6a57;
-        }
-        .total-confirm {
-          color: #e83132;
-        }
-        .now-seemly {
-          color: #ec9217;
-        }
-        .total-curd {
-          color: #10aeb5;
-        }
-        .total-dead {
-          color: #4d5054;
-        }
-        .now-danger {
-          color: #476da0;
-        }
-      }
-    }
-    .table-wrapper {
-      position: relative;
-      .loading-container {
-        position: absolute;
-        top: 50%;
+  background-color: #fff;
+  top: 60px;
+  .info-detail {
+    width: 100%;
+    box-shadow: 0 2px 20px rgba(0, 0, 0, 0.1);
+    background-color: #fff;
+    border-radius: 16px;
+    overflow: hidden;
+    /deep/ .el-tabs--card > .el-tabs__header {
+      .el-tabs__nav {
+        border: none;
         width: 100%;
-        transform: translate3d(0, -50%, 0);
+        overflow: hidden;
+        border-top-left-radius: 16px;
+        border-top-right-radius: 16px;
+      }
+      .el-tabs__item {
+        height: 80px;
+        width: 50%;
+        color: #333;
+        text-align: center;
+        background: #f1f1f1;
+        font: 26px/80px -apple-system-font, system-ui, -apple-system, Segoe UI,
+          Roboto, Ubuntu, Cantarell, Noto Sans, sans-serif, Helvetica Neue,
+          PingFang SC, Hiragino Sans GB, Microsoft YaHei UI, Microsoft YaHei,
+          Arial;
+        &.is-active {
+          background-color: #fff;
+        }
       }
     }
-    // .ncov-table-td {
-    //   padding: 6px 0;
-    // }
+    /deep/ .el-tabs__content {
+      padding: 0 20px;
+    }
+  }
+  .china-map-wrap {
+    position: relative;
+    .map-title {
+      height: 75px;
+      border-bottom: 2px solid #eee;
+      padding-left: 58px;
+      position: relative;
+      font-weight: 500;
+      font-size: 28px;
+      line-height: 75px;
+      color: #333;
+      &::before {
+        content: '';
+        width: 6px;
+        height: 32px;
+        background-color: #e10000;
+        position: absolute;
+        left: 32px;
+        top: calc(50% - 16px);
+      }
+    }
+    .tab-wrap {
+      position: absolute;
+      top: 38px;
+      right: 0px;
+    }
+    .china-map {
+      width: 100%;
+      height: 450px;
+      margin: 0;
+      padding: 0;
+      position: relative;
+    }
   }
 }
 </style>

@@ -97,7 +97,4 @@ export default {
   right: 0;
   bottom: 0;
 }
-.el-main {
-  // padding: 20px;
-}
 </style>

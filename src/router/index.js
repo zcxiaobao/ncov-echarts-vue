@@ -4,24 +4,27 @@ import VueRouter from 'vue-router'
 import Default from '@/default/default.vue'
 import NcovMap from '@/views/ncov-map.vue'
 import NcovMap2 from '@/views/ncov-map2.vue'
-import NcovTable from '@/views/ncov-table.vue'
+import NcovInfo from '@/views/ncov-info.vue'
 import NcovAllCities from '@/views/ncov-all-cities.vue'
 import NcovWorldMap from '@/views/ncov-world-map.vue'
 Vue.use(VueRouter)
 
-const routes = [{
+const routes = [
+  {
     path: '/',
     name: 'Default',
     redirect: '/ncov-map',
     component: Default,
-    children: [{
+    children: [
+      {
         name: 'NcovMap',
         path: 'ncov-map',
         component: NcovMap2
-      }, {
-        name: 'NcovTable',
-        path: 'ncov-table',
-        component: NcovTable
+      },
+      {
+        name: 'NcovInfo',
+        path: 'ncov-info',
+        component: NcovInfo
       },
       {
         name: 'NcovAllCities',

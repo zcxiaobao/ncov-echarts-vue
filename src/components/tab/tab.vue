@@ -43,10 +43,10 @@ export default {
 
 <style lang='less' scoped>
 .ncov-tab {
-  position: absolute;
-  top: 5px;
-  left: 50%;
-  transform: translate3d(-50%, 0, 0);
+  // position: absolute;
+  // top: 5px;
+  // left: 50%;
+  // transform: translate3d(-50%, 0, 0);
   /deep/ .el-tabs__item {
     color: #666;
     height: 36px;

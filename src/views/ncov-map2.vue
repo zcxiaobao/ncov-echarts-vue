@@ -1,6 +1,6 @@
 <template>
   <div class="ncov-map-wrapper">
-    <tab :activeTab="activeTab" @tab-toggle="tabToggle" :tabs="tabs"></tab>
+    <tab :activeTab="activeTab" @tab-toggle="tabToggle" :tabs="tabs" class="tab-wrap"></tab>
     <!-- <el-tabs v-model="activeTab" type="card" @tab-click="handleClick" class="ncov-tab">
       <el-tab-pane
         v-for="tab in tabs"
@@ -168,23 +168,11 @@ export default {
   bottom: 0;
   right: 0;
   left: 0;
-  .ncov-tab {
+  .tab-wrap {
     position: absolute;
     top: 5px;
     left: 50%;
     transform: translate3d(-50%, 0, 0);
-    /deep/ .el-tabs__item {
-      color: #666;
-      height: 36px;
-      line-height: 36px;
-      background: #f7f7f7;
-      border-radius: 2px;
-      &.is-active {
-        color: #4169e2;
-        background: #f1f5ff;
-        border-bottom: 1px solid transparent !important;
-      }
-    }
   }
 }
 #ncov-map {

@@ -75,22 +75,22 @@ const api = {
   getProvinceData(province) {
     console.log(province)
     if (province === '中国') {
-      return axios.get('json/china.json')
+      return axios.get('json/map/china.json')
     } else if (province === 'world') {
-      return axios.get('json/world.json')
+      return axios.get('json/map/world.json')
     } else {
-      return axios.get(`json/province/${provinces[province]}.json`)
+      return axios.get(`json/map/province/${provinces[province]}.json`)
     }
   },
   getAreaMapData(area) {
-    return axios.get(`json/${area}.json`)
+    return axios.get(`json/map/${area}.json`)
   },
   getAllCitiesData() {
     const allCities = localStorage.getItem('allCities')
     if (allCities) {
       return Promise.resolve(JSON.parse(allCities))
     }
-    return axios.get('json/china-cities.json')
+    return axios.get('json/map/china-cities.json')
   },
   getByDateJson() {
     const byDate = localStorage.getItem('byDate')
@@ -100,11 +100,10 @@ const api = {
     return axios.get('json/by_date.json')
   },
   getAreaData() {
-    const byCountry = localStorage.getItem('byCountry')
-    if (byCountry) {
-      return Promise.resolve(JSON.parse(byCountry))
-    }
     return axios.get('json/data/world-area.json')
+  },
+  getChinaTotalData() {
+    return axios.get('json/data/list-total.json')
   }
 }
 export default api

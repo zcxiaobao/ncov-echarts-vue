@@ -1,14 +1,6 @@
-import {
-  buildVisualMap
-} from './map-visualMap'
-export const buildMapOptions = function (province, data) {
+import { buildVisualMap } from './map-visualMap'
+export const buildMapOptions = function(area, data) {
   const option = {
-    // title: {
-    //   show: true,
-    //   text: '疫情累计确诊地图',
-    //   top: '8%',
-    //   left: 'center'
-    // },
     tooltip: {
       trigger: 'item',
       formatter(params) {
@@ -23,21 +15,21 @@ export const buildMapOptions = function (province, data) {
               <br/>累计死亡: ${params.data.deadCount}`
       }
     },
-    series: [{
-      type: 'map',
-      map: province,
-      name: '累计确诊',
-      center: province === '海南' ? [109.844902, 19.0392] : province === 'china' ? [104.114129, 37.550339] : undefined,
-      zoom: province === '海南' ? 6 : 1,
-      label: {
-        normal: {
-          show: true,
-          position: 'inside',
-          align: 'center'
-        }
-      },
-      data
-    }],
+    series: [
+      {
+        type: 'map',
+        map: area,
+        name: '累计确诊',
+        label: {
+          normal: {
+            show: true,
+            position: 'inside',
+            align: 'center'
+          }
+        },
+        data
+      }
+    ],
     visualMap: {
       // 左下角的颜色区域
       type: 'piecewise', // 定义为分段型 visualMap
@@ -46,7 +38,7 @@ export const buildMapOptions = function (province, data) {
       itemWidth: 40,
       bottom: 60,
       right: 20,
-      pieces: buildVisualMap(province)
+      pieces: buildVisualMap(area)
     }
   }
   return option
