@@ -1,0 +1,87 @@
+<template>
+  <div class="line-item" id="line-item" ref="chart"></div>
+</template>
+
+<script>
+import { workflow, drawChart } from '../echarts.config'
+import getOption from './option'
+const line = null
+export default {
+  data() {
+    return {
+      option: getOption()
+    }
+  },
+  props: {
+    textData: {
+      type: Object,
+      required: true
+    },
+    seriesDataPromise: {
+      type: Promise,
+      required: true
+    },
+    isTotal: {
+      type: Boolean,
+      default: true
+    }
+  },
+  methods: {
+    setOptionText() {
+      this.option.legend.data = this.textData.legend
+      this.option.color = this.textData.color
+      this.option.dataset.dimensions = this.textData.dimensions
+    },
+    initXAxis(data) {
+      this.option.xAxis.data = data.chinaDayList.map(d => d.date)
+    },
+    setSeriesData({ data }) {
+      this.initXAxis(data)
+      this.option.series = this.option.legend.data.map(name => ({
+        name,
+        type: 'line',
+        lineStyle: {
+          width: 5
+        },
+        symbolSize: 6,
+        smooth: true
+      }))
+      if (this.isTotal) {
+        this.option.dataset.source = data.chinaDayList.map(d => {
+          const { confirm, suspect, heal, dead, severe } = d.total
+          return {
+            date: d.date,
+            confirm,
+            suspect,
+            heal,
+            dead,
+            severe,
+            current: confirm - heal - dead
+          }
+        })
+      } else {
+        this.option.dataset.source = data.chinaDayList.map(d => ({
+          date: d.date,
+          ...d.today
+        }))
+      }
+      console.log(this.option.dataset)
+    }
+  },
+  mounted() {
+    workflow(this)
+  },
+  watch: {
+    seriesDataPromise(newOption) {
+      drawChart(this)
+    }
+  }
+}
+</script>
+
+<style scoped lang='less'>
+// .line-item {
+//   width: 100%;
+//   height: 100%;
+// }
+</style>
