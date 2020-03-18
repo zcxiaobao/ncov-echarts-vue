@@ -104,6 +104,9 @@ const api = {
   },
   getChinaTotalData() {
     return axios.get('json/data/list-total.json')
+  },
+  getRegionData(locationId = 420000) {
+    return axios.get(`json/data/wangyi/${locationId}.json`)
   }
 }
 export default api

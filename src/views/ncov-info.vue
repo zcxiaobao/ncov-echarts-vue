@@ -46,7 +46,7 @@
               <line-chart
                 :isTotal="false"
                 :textData="textData.ncovAddText"
-                :seriesDataPromise="seriesPromise"
+                :mapData="ncovAllData"
                 class="line-item-wrap"
               ></line-chart>
             </div>
@@ -56,7 +56,7 @@
             <div class="line-item-wrap">
               <line-chart
                 :textData="textData.ncovTotalText"
-                :seriesDataPromise="seriesPromise"
+                :mapData="ncovAllData"
                 class="line-item-wrap"
               ></line-chart>
             </div>
@@ -66,48 +66,43 @@
             <div class="line-item-wrap">
               <line-chart
                 :textData="textData.ncovHealDeadText"
-                :seriesDataPromise="seriesPromise"
+                :mapData="ncovAllData"
                 class="line-item-wrap"
               ></line-chart>
             </div>
           </el-carousel-item>
         </el-carousel>
       </div>
-      <!-- <div class="line-chart-wrapper">
+      <div class="line-chart-wrapper">
         <el-carousel height="600px" :autoplay="false" arrow="always">
           <el-carousel-item>
-            <h2 class="line-chart-title">全国疫情新增趋势</h2>
+            <h2 class="line-chart-title">全国/湖北/非湖北累计确诊对比</h2>
             <div class="line-item-wrap">
               <line-chart
                 :isTotal="false"
-                :textData="textData.ncovAddText"
-                :seriesDataPromise="seriesPromise"
+                :isNeedAssist="true"
+                :textData="textData.regionTotalText"
+                :mapData="ncovAllData"
+                :assistData="regionData"
                 class="line-item-wrap"
               ></line-chart>
             </div>
           </el-carousel-item>
           <el-carousel-item>
-            <h2 class="line-chart-title">全国确诊/疑似/重症趋势</h2>
+            <h2 class="line-chart-title">全国/湖北/非湖北新增确诊对比</h2>
             <div class="line-item-wrap">
               <line-chart
-                :textData="textData.ncovTotalText"
-                :seriesDataPromise="seriesPromise"
-                class="line-item-wrap"
-              ></line-chart>
-            </div>
-          </el-carousel-item>
-          <el-carousel-item>
-            <h2 class="line-chart-title">全国累计治愈/死亡趋势</h2>
-            <div class="line-item-wrap">
-              <line-chart
-                :textData="textData.ncovHealDeadText"
-                :seriesDataPromise="seriesPromise"
+                :isTotal="false"
+                :isNeedAssist="true"
+                :textData="textData.regionAddText"
+                :mapData="ncovAllData"
+                :assistData="regionData"
                 class="line-item-wrap"
               ></line-chart>
             </div>
           </el-carousel-item>
         </el-carousel>
-      </div>-->
+      </div>
       <!-- <line-chart :textData="textData.ncovAddText" :seriesDataPromise="seriesPromise"></line-chart> -->
 
       <!-- <div class="china-map" id="china-map" ref="chinaMap"></div> -->
@@ -220,7 +215,8 @@ export default {
         severe: { total: '-', today: '-' }
       },
       activeInfo: 'china',
-      ncovAllData: [],
+      ncovAllData: null,
+      regionData: null,
       textData: {
         ncovAddText: {
           legend: ['确诊', '治愈', '疑似', '死亡'],
@@ -239,11 +235,21 @@ export default {
         },
         regionTotalText: {
           legend: ['全国', '湖北', '非湖北'],
-          color: ['#A31D13', '#E44A3D', '#FFD667', '#791618'],
-          dimensions: ['date', 'confirm', 'current', 'suspect', 'severe']
+          color: ['#C13531', '#2F4554', '#61A0A8'],
+          dimensions: ['date', 'chinaConfirm', 'huConfirm', 'otherConfirm']
+        },
+        regionAddText: {
+          legend: ['全国', '湖北', '非湖北'],
+          color: ['#C13531', '#2F4554', '#61A0A8'],
+          dimensions: [
+            'date',
+            'chinaAddConfirm',
+            'huAddConfirm',
+            'otherAddConfirm'
+          ]
         }
       },
-      seriesPromise: api.getChinaTotalData(),
+      // seriesPromise: api.getChinaTotalData(),
       chinaMapData: [],
       chinaMapDataOrigin: [],
       mapTabs: [
@@ -255,6 +261,7 @@ export default {
   },
   created() {
     this._getChinaTotalData()
+    this._getRegionData()
   },
   mounted() {},
   computed: {},
@@ -272,6 +279,11 @@ export default {
         const chinaIndex = data.areaTree.findIndex(area => area.name === '中国')
         this.chinaMapDataOrigin =
           chinaIndex !== -1 ? data.areaTree[chinaIndex].children : []
+      })
+    },
+    _getRegionData() {
+      api.getRegionData().then(data => {
+        this.regionData = data
       })
     },
     _normallizeData({ today, total }) {

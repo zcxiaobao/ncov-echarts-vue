@@ -10,10 +10,21 @@ const showLoadingObj = {
 export const drawChart = async self => {
   self.myChart.showLoading('default', showLoadingObj)
   self.setOptionText()
-  const resData = await self.seriesDataPromise
-  self.setSeriesData(resData)
-  self.myChart.setOption(self.option)
-  self.myChart.hideLoading()
+  // const resData = await self.seriesDataPromise
+  if (!self.mapData) {
+    return
+  }
+  if (self.isNeedAssist) {
+    if (self.assistData) {
+      self.setSeriesDataByAssist(self.mapData, self.assistData)
+      self.myChart.setOption(self.option)
+      self.myChart.hideLoading()
+    }
+  } else {
+    self.setSeriesData(self.mapData)
+    self.myChart.setOption(self.option)
+    self.myChart.hideLoading()
+  }
 }
 export const workflow = self => {
   self.myChart = echarts.init(self.$refs.chart)

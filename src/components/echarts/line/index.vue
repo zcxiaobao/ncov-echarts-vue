@@ -17,13 +17,25 @@ export default {
       type: Object,
       required: true
     },
-    seriesDataPromise: {
-      type: Promise,
-      required: true
+    mapData: {
+      type: Object,
+      default: null
     },
+    // seriesDataPromise: {
+    //   type: Promise,
+    //   required: true
+    // },
     isTotal: {
       type: Boolean,
       default: true
+    },
+    isNeedAssist: {
+      type: Boolean,
+      default: false
+    },
+    assistData: {
+      type: Object,
+      default: null
     }
   },
   methods: {
@@ -35,7 +47,7 @@ export default {
     initXAxis(data) {
       this.option.xAxis.data = data.chinaDayList.map(d => d.date)
     },
-    setSeriesData({ data }) {
+    setSeriesData(data) {
       this.initXAxis(data)
       this.option.series = this.option.legend.data.map(name => ({
         name,
@@ -65,14 +77,46 @@ export default {
           ...d.today
         }))
       }
-      console.log(this.option.dataset)
+    },
+    setSeriesDataByAssist(mainData, assistData) {
+      this.initXAxis(mainData)
+      this.option.series = this.option.legend.data.map(name => ({
+        name,
+        type: 'line',
+        lineStyle: {
+          width: 5
+        },
+        symbolSize: 6,
+        smooth: true
+      }))
+      this.option.dataset.source = mainData.chinaDayList.map((d, index) => {
+        const chinaConfirm = d.total.confirm
+        const huConfirm = assistData.list[index].total.confirm
+        const chinaAddConfirm = d.today.confirm
+        const huAddConfirm = assistData.list[index].today.confirm
+        return {
+          date: d.date,
+          chinaConfirm,
+          huConfirm,
+          otherConfirm: chinaConfirm - huConfirm,
+          chinaAddConfirm,
+          huAddConfirm,
+          otherAddConfirm: chinaAddConfirm - huAddConfirm
+        }
+      })
     }
   },
   mounted() {
     workflow(this)
   },
   watch: {
-    seriesDataPromise(newOption) {
+    mapData(newOption) {
+      drawChart(this)
+    },
+    assistData() {
+      if (!this.isNeedAssist) {
+        return
+      }
       drawChart(this)
     }
   }
