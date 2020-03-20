@@ -41,7 +41,7 @@
       <div class="line-chart-wrapper">
         <el-carousel height="600px" :autoplay="false" arrow="always">
           <el-carousel-item>
-            <h2 class="line-chart-title">全国疫情新增趋势</h2>
+            <h2 class="module-title">全国疫情新增趋势</h2>
             <div class="line-item-wrap">
               <line-chart
                 :isTotal="false"
@@ -52,7 +52,7 @@
             </div>
           </el-carousel-item>
           <el-carousel-item>
-            <h2 class="line-chart-title">全国确诊/疑似/重症趋势</h2>
+            <h2 class="module-title">全国确诊/疑似/重症趋势</h2>
             <div class="line-item-wrap">
               <line-chart
                 :textData="textData.ncovTotalText"
@@ -62,7 +62,7 @@
             </div>
           </el-carousel-item>
           <el-carousel-item>
-            <h2 class="line-chart-title">全国累计治愈/死亡趋势</h2>
+            <h2 class="module-title">全国累计治愈/死亡趋势</h2>
             <div class="line-item-wrap">
               <line-chart
                 :textData="textData.ncovHealDeadText"
@@ -76,7 +76,7 @@
       <div class="line-chart-wrapper">
         <el-carousel height="600px" :autoplay="false" arrow="always">
           <el-carousel-item>
-            <h2 class="line-chart-title">全国/湖北/非湖北累计确诊对比</h2>
+            <h2 class="module-title">全国/湖北/非湖北累计确诊对比</h2>
             <div class="line-item-wrap">
               <line-chart
                 :isTotal="false"
@@ -89,7 +89,7 @@
             </div>
           </el-carousel-item>
           <el-carousel-item>
-            <h2 class="line-chart-title">全国/湖北/非湖北新增确诊对比</h2>
+            <h2 class="module-title">全国/湖北/非湖北新增确诊对比</h2>
             <div class="line-item-wrap">
               <line-chart
                 :isTotal="false"
@@ -102,6 +102,10 @@
             </div>
           </el-carousel-item>
         </el-carousel>
+      </div>
+      <div class="china-table">
+        <h2 class="module-title">中国病例</h2>
+        <table-data :tableData="chinaMapDataOrigin"></table-data>
       </div>
       <!-- <line-chart :textData="textData.ncovAddText" :seriesDataPromise="seriesPromise"></line-chart> -->
 
@@ -197,6 +201,7 @@ import Tab from '@/components/tab/tab'
 import DataDetail from '@/components/data-detail/data-detail'
 import MapInit from '@/components/map/map.vue'
 import LineChart from '@/components/echarts/line'
+import TableData from '@/components/table-data'
 import api from '@/api/api.js'
 import echarts from 'echarts'
 import { dataDetailEnum } from '@/assets/js/config'
@@ -249,7 +254,6 @@ export default {
           ]
         }
       },
-      // seriesPromise: api.getChinaTotalData(),
       chinaMapData: [],
       chinaMapDataOrigin: [],
       mapTabs: [
@@ -335,7 +339,8 @@ export default {
     DataDetail,
     Tab,
     MapInit,
-    LineChart
+    LineChart,
+    TableData
   }
 }
 </script>
@@ -422,20 +427,20 @@ export default {
     position: relative;
     overflow: hidden;
     height: 100%;
-    .line-chart-title {
-      position: relative;
-      font: 28px/60px -apple-system-font, system-ui, -apple-system, Segoe UI,
-        Roboto, Ubuntu, Cantarell, Noto Sans, sans-serif, Helvetica Neue,
-        PingFang SC, Hiragino Sans GB, Microsoft YaHei UI, Microsoft YaHei,
-        Arial;
-      margin-top: 10px;
-      margin-bottom: 20px;
-    }
+
     .line-item-wrap {
       height: 500px;
       border: 1px solid #eee;
       box-sizing: border-box;
     }
+  }
+  .module-title {
+    position: relative;
+    font: 28px/60px -apple-system-font, system-ui, -apple-system, Segoe UI,
+      Roboto, Ubuntu, Cantarell, Noto Sans, sans-serif, Helvetica Neue,
+      PingFang SC, Hiragino Sans GB, Microsoft YaHei UI, Microsoft YaHei, Arial;
+    margin-top: 10px;
+    margin-bottom: 20px;
   }
 }
 </style>
