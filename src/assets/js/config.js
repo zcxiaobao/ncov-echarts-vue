@@ -13,3 +13,18 @@ export const dataDetailEnum = {
   severe: '现有重症',
   suspect: '现有疑似'
 }
+export const countryEngName = {
+  world: 'world',
+  china: '中国',
+  italy: '意大利',
+  japan: '日本',
+  iran: '伊朗',
+  korea: '韩国'
+}
+export const ncovInfoLoc = {
+  italy: '15',
+  japan: '1',
+  iran: '826',
+  korea: '4',
+  hubei: '420000'
+}

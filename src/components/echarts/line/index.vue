@@ -48,7 +48,7 @@ export default {
       this.option.xAxis.data = data.chinaDayList.map(d => d.date)
     },
     setSeriesData(data) {
-      this.initXAxis(data)
+      // this.initXAxis(data)
       this.option.series = this.option.legend.data.map(name => ({
         name,
         type: 'line',
@@ -58,8 +58,9 @@ export default {
         symbolSize: 6,
         smooth: true
       }))
+      const list = data.chinaDayList || data.list || []
       if (this.isTotal) {
-        this.option.dataset.source = data.chinaDayList.map(d => {
+        this.option.dataset.source = list.map(d => {
           const { confirm, suspect, heal, dead, severe } = d.total
           return {
             date: d.date,
@@ -72,11 +73,13 @@ export default {
           }
         })
       } else {
-        this.option.dataset.source = data.chinaDayList.map(d => ({
+        this.option.dataset.source = list.map(d => ({
           date: d.date,
           ...d.today
         }))
       }
+      this.myChart.setOption(this.option)
+      this.myChart.hideLoading()
     },
     setSeriesDataByAssist(mainData, assistData) {
       this.initXAxis(mainData)
@@ -104,6 +107,8 @@ export default {
           otherAddConfirm: chinaAddConfirm - huAddConfirm
         }
       })
+      this.myChart.setOption(this.option)
+      this.myChart.hideLoading()
     }
   },
   mounted() {

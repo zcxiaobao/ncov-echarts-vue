@@ -1,7 +1,7 @@
 <template>
   <el-table
     ref="table"
-    :data="tableData"
+    :data="tableData_"
     style="width: 100%"
     v-show="tableData && tableData.length > 0"
     @row-click="toggleExpand"
@@ -21,7 +21,7 @@
           <el-table-column width="10" label="布局"></el-table-column>
           <el-table-column width="28" label="布局"></el-table-column>
           <el-table-column label="地区" prop="name"></el-table-column>
-          <el-table-column label="新增确诊" prop="today.confirm"></el-table-column>
+          <el-table-column label="新增确诊" prop="today.confirm" :formatter="formatVal"></el-table-column>
           <el-table-column label="确诊" prop="total.confirm"></el-table-column>
           <el-table-column label="死亡" prop="total.dead"></el-table-column>
           <el-table-column label="治愈" prop="total.heal"></el-table-column>
@@ -38,13 +38,13 @@
       </template>
     </el-table-column>
     <el-table-column label="地区" prop="name"></el-table-column>
-    <el-table-column label="新增确诊" prop="today.confirm"></el-table-column>
+    <el-table-column label="新增确诊" prop="today.confirm" :formatter="formatVal"></el-table-column>
     <el-table-column label="确诊" prop="total.confirm"></el-table-column>
     <el-table-column label="死亡" prop="total.dead"></el-table-column>
     <el-table-column label="治愈" prop="total.heal"></el-table-column>
     <el-table-column label="疫情">
       <template slot-scope="props">
-        <a v-show="props.row.children.length" @click="handleEdit(props.$index, props.row)">编辑</a>
+        <a v-show="props.row.children.length">编辑</a>
       </template>
     </el-table-column>
   </el-table>
@@ -58,16 +58,11 @@ export default {
       required: true
     }
   },
-  created() {
-    // window.addEventListener('scroll', e => {
-    //   console.log(e)
-    // })
-  },
   computed: {
-    needTableData() {
-      return this.tableData.map(t => {
-        t.expansion = false
-      })
+    tableData_() {
+      return [...this.tableData].sort(
+        (a, b) => b.total.confirm - a.total.confirm
+      )
     }
   },
   methods: {
@@ -94,7 +89,7 @@ export default {
         return classNameStr + ' cell-text-left'
       }
       if (columnIndex === 2) {
-        return classNameStr + ' cell-bold'
+        return classNameStr + ' cell-bold cell-text-left'
       }
       if (columnIndex === 3) {
         return classNameStr + ' cell-danger'
@@ -103,6 +98,9 @@ export default {
         return classNameStr + ' cell-link'
       }
       return classNameStr
+    },
+    formatVal(row, column, cellValue, index) {
+      return cellValue || '-'
     }
   }
 }

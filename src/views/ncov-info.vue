@@ -34,10 +34,12 @@
         <el-tab-pane label="疫情数据" name="local">山东</el-tab-pane>
       </el-tabs>
     </div>
-    <div class="china-map-wrap">
+    <div class="china-map-wrap map-wrap">
       <div class="map-title">中国疫情</div>
       <tab :activeTab="activeMapTab" @tab-toggle="mapTabToggle" :tabs="mapTabs" class="tab-wrap"></tab>
-      <map-init area="china" :mapData="chinaMapData"></map-init>
+      <div style="height: 700px">
+        <base-map area="china" :mapData="chinaMapData" class="map-container"></base-map>
+      </div>
       <div class="line-chart-wrapper">
         <el-carousel height="600px" :autoplay="false" arrow="always">
           <el-carousel-item>
@@ -83,7 +85,7 @@
                 :isNeedAssist="true"
                 :textData="textData.regionTotalText"
                 :mapData="ncovAllData"
-                :assistData="regionData"
+                :assistData="region.hubei"
                 class="line-item-wrap"
               ></line-chart>
             </div>
@@ -96,7 +98,7 @@
                 :isNeedAssist="true"
                 :textData="textData.regionAddText"
                 :mapData="ncovAllData"
-                :assistData="regionData"
+                :assistData="region.hubei"
                 class="line-item-wrap"
               ></line-chart>
             </div>
@@ -107,91 +109,99 @@
         <h2 class="module-title">中国病例</h2>
         <table-data :tableData="chinaMapDataOrigin"></table-data>
       </div>
-      <!-- <line-chart :textData="textData.ncovAddText" :seriesDataPromise="seriesPromise"></line-chart> -->
-
-      <!-- <div class="china-map" id="china-map" ref="chinaMap"></div> -->
     </div>
-    <!-- <el-row type="flex" justify="center" class="ncov-detail-wrapper">
-      <el-col :span="16" class="ncov-detail">
-        <el-row type="flex" justify="space-around">
-          <el-col :span="4">
-            <el-card :body-style="{ padding: '10px' }" shadow="never">
-              <div class="detail-title">现有确诊</div>
-              <div class="detail-number now-confirm">-</div>
-              <div class="detail-trend">
-                昨日
-                <span class="now-confirm"></span>
-              </div>
-            </el-card>
-          </el-col>%%
-          <el-col :span="4">
-            <el-card :body-style="{ padding: '10px' }" shadow="never">
-              <div class="detail-title">累计确诊</div>
-              <div class="detail-number total-confirm">-</div>
-              <div class="detail-trend">
-                昨日
-                <span class="total-confirm"></span>
-              </div>
-            </el-card>
+    <div class="other-country-wrap map-wrap">
+      <div class="map-title">海外疫情</div>
+      <div class="info-detail">
+        <el-row type="flex" class="row-bg" justify="center">
+          <el-col :span="6">
+            <data-detail title="累计确诊" :data="otherCountryInfo.confirm" clsType="confirm"></data-detail>
           </el-col>
-          <el-col :span="4">
-            <el-card :body-style="{ padding: '10px' }" shadow="never">
-              <div class="detail-title">累计治愈</div>
-              <div class="detail-number total-curd">-</div>
-              <div class="detail-trend">
-                昨日
-                <span class="total-curd"></span>
-              </div>
-            </el-card>
+          <el-col :span="6">
+            <data-detail title="现存确诊" :data="otherCountryInfo.current" clsType="heal"></data-detail>
           </el-col>
-          <el-col :span="4">
-            <el-card :body-style="{ padding: '10px' }" shadow="never">
-              <div class="detail-title">累计死亡</div>
-              <div class="detail-number total-dead">-</div>
-              <div class="detail-trend">
-                昨日
-                <span class="total-dead"></span>
-              </div>
-            </el-card>
+          <el-col :span="6">
+            <data-detail title="累计死亡" :data="otherCountryInfo.dead" clsType="dead"></data-detail>
+          </el-col>
+          <el-col :span="6">
+            <data-detail
+              title="累计治愈"
+              :data="otherCountryInfo.heal"
+              :isNeedBorder="false"
+              clsType="heal"
+            ></data-detail>
           </el-col>
         </el-row>
-      </el-col>
-    </el-row>-->
-    <!-- <el-row class="table-wrapper">
-        <el-table
-          ref="ncovTable"
-          v-show="ncovData.length"
-          :data="ncovData"
-          style="width: 100%;margin-bottom: 20px;"
-          :row-key="rowKeyId"
-          @expand-change="expandChange"
-          :tree-props="{children: 'cities', hasChildren: 'hasCities'}"
-          :cell-style="{padding: '6px 0'}"
-        >
-          <el-table-column label="地区" width="180" :formatter="formatTableShow">
-            <template slot-scope="scope">{{ scope.row.provinceShortName || scope.row.cityName }}</template>
-          </el-table-column>
-          <el-table-column
-            prop="confirmedCount"
-            label="现存确诊"
-            width="180"
-            :formatter="formatTableShow"
-          ></el-table-column>
-          <el-table-column
-            prop="currentConfirmedCount"
-            label="累计确诊"
-            width="180"
-            :formatter="formatTableShow"
-          ></el-table-column>
-          <el-table-column prop="deadCount" label="死亡" :formatter="formatTableShow"></el-table-column>
-          <el-table-column prop="curedCount" label="治愈" :formatter="formatTableShow"></el-table-column>
-        </el-table>
-        <div class="loading-container" v-show="!ncovData.length">
-          <loading />
-        </div>
-    </el-row>-->
+      </div>
+      <div class="line-chart-wrapper">
+        <el-carousel height="700px" :autoplay="false" arrow="always">
+          <el-carousel-item>
+            <base-map :mapData="worldMapData" area="world" :showLabel="false" class="map-container"></base-map>
+          </el-carousel-item>
+          <el-carousel-item>
+            <base-map :mapData="italyMapData" area="italy" class="map-container"></base-map>
+          </el-carousel-item>
+          <el-carousel-item>
+            <base-map :mapData="koreaMapData" area="korea" class="map-container"></base-map>
+          </el-carousel-item>
+          <el-carousel-item>
+            <base-map :mapData="iranMapData" area="iran" class="map-container"></base-map>
+          </el-carousel-item>
+          <el-carousel-item>
+            <base-map :mapData="japanMapData" area="japan" class="map-container"></base-map>
+          </el-carousel-item>
+        </el-carousel>
+      </div>
+      <div class="line-chart-wrapper">
+        <el-carousel height="600px" :autoplay="false" arrow="always">
+          <el-carousel-item>
+            <h2 class="module-title">意大利疫情趋势</h2>
+            <div class="line-item-wrap">
+              <line-chart
+                :textData="textData.otherRegionText"
+                :mapData="region.italy"
+                class="line-item-wrap"
+              ></line-chart>
+            </div>
+          </el-carousel-item>
+          <el-carousel-item>
+            <h2 class="module-title">伊朗趋势</h2>
+            <div class="line-item-wrap">
+              <line-chart
+                :textData="textData.otherRegionText"
+                :mapData="region.iran"
+                class="line-item-wrap"
+              ></line-chart>
+            </div>
+          </el-carousel-item>
+          <el-carousel-item>
+            <h2 class="module-title">韩国疫情趋势</h2>
+            <div class="line-item-wrap">
+              <line-chart
+                :textData="textData.otherRegionText"
+                :mapData="region.korea"
+                class="line-item-wrap"
+              ></line-chart>
+            </div>
+          </el-carousel-item>
+          <el-carousel-item>
+            <h2 class="module-title">日本疫情趋势</h2>
+            <div class="line-item-wrap">
+              <line-chart
+                :textData="textData.otherRegionText"
+                :mapData="region.japan"
+                class="line-item-wrap"
+              ></line-chart>
+            </div>
+          </el-carousel-item>
+        </el-carousel>
+      </div>
+      <div class="china-table">
+        <h2 class="module-title">海外病例</h2>
+        <table-data :tableData="tableData.world"></table-data>
+      </div>
+    </div>
   </el-row>
-  <!-- </div> -->
 </template>
 
 <script>
@@ -202,12 +212,13 @@ import DataDetail from '@/components/data-detail/data-detail'
 import MapInit from '@/components/map/map.vue'
 import LineChart from '@/components/echarts/line'
 import TableData from '@/components/table-data'
+import TableTry from '@/components/table-try'
+import BaseMap from '@/components/echarts/map/map'
 import api from '@/api/api.js'
 import echarts from 'echarts'
-import { dataDetailEnum } from '@/assets/js/config'
+import { dataDetailEnum, countryEngName, ncovInfoLoc } from '@/assets/js/config'
 import { buildMapOptions } from '@/assets/js/map-option.js'
 
-// let map = ''
 export default {
   data() {
     return {
@@ -219,9 +230,21 @@ export default {
         current: { total: '-', today: '-' },
         severe: { total: '-', today: '-' }
       },
+      otherCountryInfo: {
+        confirm: { total: '-', today: '-' },
+        heal: { total: '-', today: '-' },
+        dead: { total: '-', today: '-' },
+        current: { total: '-', today: '-' }
+      },
       activeInfo: 'china',
       ncovAllData: null,
-      regionData: null,
+      region: {
+        hubei: null,
+        italy: null,
+        korea: null,
+        japan: null,
+        iran: null
+      },
       textData: {
         ncovAddText: {
           legend: ['确诊', '治愈', '疑似', '死亡'],
@@ -252,10 +275,24 @@ export default {
             'huAddConfirm',
             'otherAddConfirm'
           ]
+        },
+        otherRegionText: {
+          legend: ['确诊', '治愈', '死亡'],
+          color: ['#A31D13', '#58A97A', '#828282'],
+          dimensions: ['date', 'confirm', 'heal', 'dead']
         }
+      },
+      tableData: {
+        china: [],
+        world: []
       },
       chinaMapData: [],
       chinaMapDataOrigin: [],
+      italyMapData: [],
+      japanMapData: [],
+      iranMapData: [],
+      koreaMapData: [],
+      worldMapData: [],
       mapTabs: [
         { label: '累计确诊', name: 'total' },
         { label: '现存确诊', name: 'now' }
@@ -265,10 +302,10 @@ export default {
   },
   created() {
     this._getChinaTotalData()
-    this._getRegionData()
+    for (const loc in ncovInfoLoc) {
+      this._getRegionData(ncovInfoLoc[loc], loc)
+    }
   },
-  mounted() {},
-  computed: {},
   methods: {
     mapTabToggle(tab) {
       this.activeMapTab = tab.name
@@ -279,68 +316,127 @@ export default {
     _getChinaTotalData() {
       api.getChinaTotalData().then(({ data }) => {
         this._normallizeData(data.chinaTotal)
+        this._calcOtherCountryData(data.areaTree)
         this.ncovAllData = data
-        const chinaIndex = data.areaTree.findIndex(area => area.name === '中国')
-        this.chinaMapDataOrigin =
-          chinaIndex !== -1 ? data.areaTree[chinaIndex].children : []
+        this.chinaMapDataOrigin = this._getCountryData(data.areaTree, 'china')
+        this.$set(this.tableData, 'china', this.chinaMapDataOrigin)
+        this.$set(
+          this.tableData,
+          'world',
+          this._getCountryData(data.areaTree, 'world')
+        )
+        // this.worldMapDataOrigin = this._getCountryData(data.areaTree, 'china')
+        this.italyMapData = this._transformMapData(
+          this._getCountryData(data.areaTree, 'italy')
+        )
+        this.koreaMapData = this._transformMapData(
+          this._getCountryData(data.areaTree, 'korea')
+        )
+        this.iranMapData = this._transformMapData(
+          this._getCountryData(data.areaTree, 'iran')
+        )
+        this.japanMapData = this._transformMapData(
+          this._getCountryData(data.areaTree, 'japan')
+        )
+        this.worldMapData = this._transformMapData(data.areaTree)
       })
     },
-    _getRegionData() {
-      api.getRegionData().then(data => {
-        this.regionData = data
+    _getCountryData(data, area) {
+      if (area === 'world') {
+        return data.filter(d => d.name !== '中国')
+      }
+      const areaChinaName = countryEngName[area]
+      const index = data.findIndex(d => d.name === areaChinaName)
+      if (index !== -1) {
+        return data[index].children
+      }
+    },
+    _getRegionData(locId, loc) {
+      api.getRegionData(locId).then(data => {
+        this.$set(this.region, loc, data)
       })
     },
     _normallizeData({ today, total }) {
       const res = []
       Object.keys(dataDetailEnum).forEach(d => {
         let tmp = {}
-
         tmp =
           d === 'current'
             ? {
                 total: total.confirm - total.dead - total.heal,
-                today: (today.storeConfirm > 0 ? '+' : '') + today.storeConfirm
+                today: today.storeConfirm
               }
             : {
                 total: total[d],
-                today: (today[d] > 0 ? '+' : '') + today[d]
+                today: today[d]
               }
         this.$set(this.chinaInfo, d, tmp)
       })
       return res
     },
-    _transformChinaMapData(list) {
+    _calcOtherCountryData(areaTree) {
+      const tmp = {
+        confirm: { today: 0, total: 0 },
+        current: { today: 0, total: 0 },
+        heal: { today: 0, total: 0 },
+        dead: { today: 0, total: 0 },
+        severe: { today: 0, total: 0 },
+        suspect: { today: 0, total: 0 }
+      }
+      areaTree.forEach(area => {
+        if (area.name === '中国') return
+        const { total, today } = area
+        Object.keys(dataDetailEnum).forEach(key => {
+          if (key === 'current') {
+            tmp[key].today += today.storeConfirm ? today.storeConfirm : 0
+          } else {
+            tmp[key].total += total[key] ? total[key] : 0
+            tmp[key].today += today[key] ? today[key] : 0
+          }
+        })
+      })
+      tmp.current.total = tmp.confirm.total - tmp.heal.total - tmp.dead.total
+      tmp.current.today = tmp.confirm.today - tmp.heal.today - tmp.dead.today
+
+      this.otherCountryInfo = tmp
+    },
+    _transformMapData(list) {
       return list.map(area => {
         const { confirm, heal, dead } = area.total
         const current = confirm - heal - dead
+        const label = {}
+        if (confirm >= 1000) {
+          label.color = '#fff'
+        }
         return {
           name: area.name,
           value: this.activeMapTab === 'total' ? confirm : current,
           confirm,
           heal,
           dead,
-          current
+          current,
+          label
         }
       })
     }
   },
   watch: {
     chinaMapDataOrigin(newMapData) {
-      this.chinaMapData = this._transformChinaMapData(newMapData)
+      this.chinaMapData = this._transformMapData(newMapData)
     },
     activeMapTab(newMapTab, oldMapTab) {
       if (newMapTab === oldMapTab) {
         return
       }
-      this.chinaMapData = this._transformChinaMapData(this.chinaMapDataOrigin)
+      this.chinaMapData = this._transformMapData(this.chinaMapDataOrigin)
     }
   },
   components: {
     DataDetail,
     Tab,
-    MapInit,
     LineChart,
-    TableData
+    TableData,
+    BaseMap
   }
 }
 </script>
@@ -388,8 +484,11 @@ export default {
     /deep/ .el-tabs__content {
       padding: 0 20px;
     }
+    /deep/ .el-tabs__header {
+      margin: 0;
+    }
   }
-  .china-map-wrap {
+  .map-wrap {
     position: relative;
     .map-title {
       height: 75px;
@@ -422,6 +521,12 @@ export default {
       padding: 0;
       position: relative;
     }
+    .map-container {
+      height: 100%;
+      border: 1px solid #eee;
+      background: #f2f2f2;
+      box-sizing: border-box;
+    }
   }
   .line-chart-wrapper {
     position: relative;
@@ -431,6 +536,7 @@ export default {
     .line-item-wrap {
       height: 500px;
       border: 1px solid #eee;
+      background: #f2f2f2;
       box-sizing: border-box;
     }
   }

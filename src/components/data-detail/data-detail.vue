@@ -1,11 +1,11 @@
 <template>
   <div class="detail-wrapper" :class="isNeedBorder? 'border': ''">
-    <el-card :body-style="{ padding: '10px'}" shadow="never">
+    <el-card :body-style="{ padding: '18px 10px'}" shadow="never">
       <div class="detail-title">{{title}}</div>
       <div class="detail-number" :class="clsType">{{data.total}}</div>
       <div class="detail-trend" v-show="todayIsShow">
         昨日
-        <span :class="clsType">{{data.today}}</span>
+        <span :class="clsType">{{formatNum(data.today)}}</span>
       </div>
     </el-card>
   </div>
@@ -40,6 +40,11 @@ export default {
       todayIsShow: false
     }
   },
+  methods: {
+    formatNum(num) {
+      return (num > 0 ? '+' : '') + num
+    }
+  },
   watch: {
     data() {
       this.todayIsShow = true
@@ -50,7 +55,7 @@ export default {
 
 <style lang='less' scoped>
 .detail-wrapper {
-  margin-bottom: 24px;
+  // margin-bottom: 24px;
   position: relative;
   .el-card {
     border: 0px solid transparent;
@@ -75,14 +80,14 @@ export default {
     color: #333;
   }
   .detail-number {
-    font: 700 32px/64px DIN Alternate, din_alternate_bold, -apple-system-font,
+    font: 700 30px/64px DIN Alternate, din_alternate_bold, -apple-system-font,
       system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, Noto Sans,
       sans-serif, Helvetica Neue, PingFang SC, Hiragino Sans GB,
       Microsoft YaHei UI, Microsoft YaHei, Arial;
     text-align: center;
   }
   .detail-trend {
-    font: 18px/1 -apple-system-font, system-ui, -apple-system, Segoe UI, Roboto,
+    font: 16px/1 -apple-system-font, system-ui, -apple-system, Segoe UI, Roboto,
       Ubuntu, Cantarell, Noto Sans, sans-serif, Helvetica Neue, PingFang SC,
       Hiragino Sans GB, Microsoft YaHei UI, Microsoft YaHei, Arial;
     color: #999;

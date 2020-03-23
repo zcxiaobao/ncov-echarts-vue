@@ -23,7 +23,6 @@ export default {
         { label: '伊朗', name: 'iran' },
         { label: '韩国', name: 'korea' },
         { label: '日本', name: 'japan' }
-        // { label: '中国', name: 'china' }
       ],
       activeTab: 'world',
       ncovWorldData: []
@@ -34,9 +33,7 @@ export default {
       this.ncovWorldData = areaTree
     })
     api.getAreaMapData('iran').then(({ features }) => {
-      console.log(features)
       const names = features.map(city => city.properties.name)
-      console.log(names)
     })
   },
   watch: {

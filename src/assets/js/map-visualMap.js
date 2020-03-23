@@ -1,4 +1,5 @@
-const chinaPieces = [{
+const chinaPieces = [
+  {
     gt: 9999,
     label: '>10000',
     color: '#4F070D'
@@ -39,7 +40,8 @@ const chinaPieces = [{
     color: '#FFF'
   }
 ]
-const provincePieces = [{
+const provincePieces = [
+  {
     gt: 999,
     label: '>1000',
     color: '#4F070D'
@@ -80,6 +82,8 @@ const provincePieces = [{
     color: '#FFF'
   }
 ]
-export const buildVisualMap = function (province) {
-  return province === 'china' ? chinaPieces : provincePieces
+export const buildVisualMap = function(province) {
+  return province === 'china' || province === 'world'
+    ? chinaPieces
+    : provincePieces
 }

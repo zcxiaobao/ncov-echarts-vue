@@ -17,13 +17,11 @@ export const drawChart = async self => {
   if (self.isNeedAssist) {
     if (self.assistData) {
       self.setSeriesDataByAssist(self.mapData, self.assistData)
-      self.myChart.setOption(self.option)
-      self.myChart.hideLoading()
     }
   } else {
     self.setSeriesData(self.mapData)
-    self.myChart.setOption(self.option)
-    self.myChart.hideLoading()
+    // self.myChart.setOption(self.option)
+    // self.myChart.hideLoading()
   }
 }
 export const workflow = self => {
