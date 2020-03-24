@@ -1,5 +1,6 @@
 <template>
   <el-row class="ncov-info">
+    <!-- 详情 -->
     <div class="info-detail">
       <el-tabs v-model="activeInfo" type="card" @tab-click="infoTabToggle">
         <el-tab-pane label="全国疫情数据(含港澳台)" name="china">
@@ -34,8 +35,9 @@
         <el-tab-pane label="疫情数据" name="local">山东</el-tab-pane>
       </el-tabs>
     </div>
+    <!-- 中国疫情 -->
     <div class="china-map-wrap map-wrap">
-      <div class="map-title">中国疫情</div>
+      <div class="sec-title">中国疫情</div>
       <tab :activeTab="activeMapTab" @tab-toggle="mapTabToggle" :tabs="mapTabs" class="tab-wrap"></tab>
       <div style="height: 700px">
         <base-map area="china" :mapData="chinaMapData" class="map-container"></base-map>
@@ -110,8 +112,9 @@
         <table-data :tableData="chinaMapDataOrigin"></table-data>
       </div>
     </div>
+    <!-- 世界疫情 -->
     <div class="other-country-wrap map-wrap">
-      <div class="map-title">海外疫情</div>
+      <div class="sec-title">海外疫情</div>
       <div class="info-detail">
         <el-row type="flex" class="row-bg" justify="center">
           <el-col :span="6">
@@ -201,19 +204,43 @@
         <table-data :tableData="tableData.world"></table-data>
       </div>
     </div>
+    <!-- 实时播报 -->
+    <div class="realtime">
+      <div class="sec-title">实时播报</div>
+      <div class="timeline-wrap">
+        <timeline-wrap :items="newsData.timelineData"></timeline-wrap>
+      </div>
+    </div>
+    <!-- 权威发布 -->
+    <div class="power-report">
+      <div class="sec-title">权威报告</div>
+      <ul>
+        <template v-for="(power,i) in newsData.powerData">
+          <power-card :power="power" :key="i"></power-card>
+        </template>
+      </ul>
+    </div>
+    <!-- 前沿知识 -->
+    <div class="paper">
+      <div class="sec-title">前沿知识</div>
+      <div class="timeline-wrap">
+        <timeline-wrap :items="newsData.paperData"></timeline-wrap>
+      </div>
+    </div>
   </el-row>
 </template>
 
 <script>
 import { mapGetters, mapMutations } from 'vuex'
-import Loading from '@/components/loading/loading.vue'
 import Tab from '@/components/tab/tab'
 import DataDetail from '@/components/data-detail/data-detail'
+import TimelineWrap from '@/components/timeline-wrap'
 import MapInit from '@/components/map/map.vue'
 import LineChart from '@/components/echarts/line'
 import TableData from '@/components/table-data'
 import TableTry from '@/components/table-try'
 import BaseMap from '@/components/echarts/map/map'
+import PowerCard from '@/components/power-card'
 import api from '@/api/api.js'
 import echarts from 'echarts'
 import { dataDetailEnum, countryEngName, ncovInfoLoc } from '@/assets/js/config'
@@ -286,6 +313,11 @@ export default {
         china: [],
         world: []
       },
+      newsData: {
+        powerData: [],
+        timelineData: [],
+        paperData: []
+      },
       chinaMapData: [],
       chinaMapDataOrigin: [],
       italyMapData: [],
@@ -297,7 +329,8 @@ export default {
         { label: '累计确诊', name: 'total' },
         { label: '现存确诊', name: 'now' }
       ],
-      activeMapTab: 'total'
+      activeMapTab: 'total',
+      timelineData: []
     }
   },
   created() {
@@ -305,6 +338,11 @@ export default {
     for (const loc in ncovInfoLoc) {
       this._getRegionData(ncovInfoLoc[loc], loc)
     }
+    this._getNormalList()
+    api.getVirusReport().then(res => {
+      this.$set(this.newsData, 'powerData', res.power)
+      this.$set(this.newsData, 'paperData', res.papers)
+    })
   },
   methods: {
     mapTabToggle(tab) {
@@ -312,6 +350,14 @@ export default {
     },
     infoTabToggle(tab) {
       this.activeInfo = tab.name
+    },
+    _getNormalList() {
+      api.getNormalList().then(({ code, data }) => {
+        if (code === 0) {
+          this.$set(this.newsData, 'timelineData', data.items.slice(0, 15))
+          // this.timelineData = data && data.items.slice(0, 15)
+        }
+      })
     },
     _getChinaTotalData() {
       api.getChinaTotalData().then(({ data }) => {
@@ -325,7 +371,6 @@ export default {
           'world',
           this._getCountryData(data.areaTree, 'world')
         )
-        // this.worldMapDataOrigin = this._getCountryData(data.areaTree, 'china')
         this.italyMapData = this._transformMapData(
           this._getCountryData(data.areaTree, 'italy')
         )
@@ -436,7 +481,9 @@ export default {
     Tab,
     LineChart,
     TableData,
-    BaseMap
+    BaseMap,
+    TimelineWrap,
+    PowerCard
   }
 }
 </script>
@@ -490,25 +537,7 @@ export default {
   }
   .map-wrap {
     position: relative;
-    .map-title {
-      height: 75px;
-      border-bottom: 2px solid #eee;
-      padding-left: 58px;
-      position: relative;
-      font-weight: 500;
-      font-size: 28px;
-      line-height: 75px;
-      color: #333;
-      &::before {
-        content: '';
-        width: 6px;
-        height: 32px;
-        background-color: #e10000;
-        position: absolute;
-        left: 32px;
-        top: calc(50% - 16px);
-      }
-    }
+
     .tab-wrap {
       position: absolute;
       top: 38px;
@@ -547,6 +576,25 @@ export default {
       PingFang SC, Hiragino Sans GB, Microsoft YaHei UI, Microsoft YaHei, Arial;
     margin-top: 10px;
     margin-bottom: 20px;
+  }
+  .sec-title {
+    height: 75px;
+    border-bottom: 2px solid #eee;
+    padding-left: 58px;
+    position: relative;
+    font-weight: 500;
+    font-size: 28px;
+    line-height: 75px;
+    color: #333;
+    &::before {
+      content: '';
+      width: 6px;
+      height: 32px;
+      background-color: #e10000;
+      position: absolute;
+      left: 32px;
+      top: calc(50% - 16px);
+    }
   }
 }
 </style>

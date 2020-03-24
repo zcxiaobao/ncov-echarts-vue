@@ -38,6 +38,24 @@ const provinces = {
   香港: 'xianggang',
   澳门: 'aomen'
 }
+axios.jsonp = url => {
+  if (!url) {
+    console.error('Axios.JSONP 至少需要一个url参数!')
+    return
+  }
+  return new Promise((resolve, reject) => {
+    window.callback = result => {
+      resolve(result)
+    }
+    var JSONP = document.createElement('script')
+    JSONP.type = 'text/javascript'
+    JSONP.src = `${url}&callback=callback`
+    document.getElementsByTagName('head')[0].appendChild(JSONP)
+    setTimeout(() => {
+      document.getElementsByTagName('head')[0].removeChild(JSONP)
+    }, 500)
+  })
+}
 const api = {
   getNcovData(isLatest = true) {
     const dateTime = getDate()
@@ -107,6 +125,14 @@ const api = {
   },
   getRegionData(locationId = 420000) {
     return axios.get(`json/data/wangyi/${locationId}.json`)
+  },
+  getNormalList() {
+    return axios.get('json/data/wangyi/normal-list.json')
+  },
+  getVirusReport() {
+    return axios.jsonp(
+      `https://ent.163.com/special/00035080/virus_report_data.js?_=${+new Date()}`
+    )
   }
 }
 export default api
