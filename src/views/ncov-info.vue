@@ -62,23 +62,28 @@
     <div class="china-map-wrap">
       <div class="sec-title">中国疫情</div>
       <div class="wrap">
-        <tab :activeTab="activeMapTab" @tab-toggle="mapTabToggle" :tabs="mapTabs" class="tab-wrap"></tab>
-        <div style="height: 7.00rem">
-          <p class="map-title">中国疫情图</p>
+        <p class="map-title">中国疫情图</p>
+        <el-carousel height="7.00rem" :autoplay="false" arrow="hover" indicator-position="none">
+          <el-carousel-item>
+            <base-map area="china" :mapData="mapData.chinaTotal" class="map-container"></base-map>
+          </el-carousel-item>
+          <el-carousel-item>
+            <base-map area="china" :mapData="mapData.chinaCurrent" class="map-container"></base-map>
+          </el-carousel-item>
+        </el-carousel>
+        <!-- <div style="height: 7.00rem">
           <base-map area="china" :mapData="chinaMapData" class="map-container"></base-map>
-        </div>
+        </div>-->
         <div class="line-chart-wrapper">
           <el-carousel height="6.00rem" :autoplay="false" arrow="always" indicator-position="none">
             <el-carousel-item>
               <h2 class="module-title">全国疫情新增趋势</h2>
-              <!-- <div class="line-item-wrap"> -->
               <line-chart
                 :isTotal="false"
                 :textData="textData.ncovAddText"
                 :mapData="ncovAllData"
                 class="line-item-wrap"
               ></line-chart>
-              <!-- </div> -->
             </el-carousel-item>
             <el-carousel-item>
               <h2 class="module-title">全国确诊/疑似/重症趋势</h2>
@@ -284,7 +289,6 @@ import { buildMapOptions } from '@/assets/js/map-option.js'
 export default {
   data() {
     return {
-      newsHeight: '',
       chinaInfo: {
         confirm: { total: '-', today: '-' },
         suspect: { total: '-', today: '-' },
@@ -301,7 +305,7 @@ export default {
       },
       activeInfo: 'china',
       ncovAllData: null,
-      // 地区趋势数据
+      // 地区趋势 trend数据
       region: {
         hubei: null,
         italy: null,
@@ -309,7 +313,7 @@ export default {
         japan: null,
         iran: null
       },
-      // line折线图基本信息
+      // line折线图基本option信息
       textData: {
         ncovAddText: {
           legend: ['确诊', '治愈', '疑似', '死亡'],
@@ -359,6 +363,11 @@ export default {
         paperData: [],
         scrollNewData: []
       },
+      // 地图信息
+      mapData: {
+        chinaTotal: [],
+        chinaCurrent: []
+      },
       chinaMapData: [],
       chinaMapDataOrigin: [],
       italyMapData: [],
@@ -366,11 +375,11 @@ export default {
       iranMapData: [],
       koreaMapData: [],
       worldMapData: [],
-      mapTabs: [
-        { label: '累计确诊', name: 'total' },
-        { label: '现存确诊', name: 'now' }
-      ],
-      activeMapTab: 'total',
+      // mapTabs: [
+      //   { label: '累计确诊', name: 'total' },
+      //   { label: '现存确诊', name: 'now' }
+      // ],
+      // activeMapTab: 'total',
       timelineData: []
     }
   },
@@ -387,9 +396,6 @@ export default {
     })
   },
   methods: {
-    mapTabToggle(tab) {
-      this.activeMapTab = tab.name
-    },
     infoTabToggle(tab) {
       this.activeInfo = tab.name
     },
@@ -408,6 +414,16 @@ export default {
         this._calcOtherCountryData(data.areaTree)
         this.ncovAllData = data
         this.chinaMapDataOrigin = this._getCountryData(data.areaTree, 'china')
+        this.$set(
+          this.mapData,
+          'chinaTotal',
+          this._transformMapData(this.chinaMapDataOrigin)
+        )
+        this.$set(
+          this.mapData,
+          'chinaCurrent',
+          this._transformMapData(this.chinaMapDataOrigin, false)
+        )
         this.$set(this.tableData, 'china', this.chinaMapDataOrigin)
         this.$set(
           this.tableData,
@@ -429,7 +445,7 @@ export default {
         this.worldMapData = this._transformMapData(data.areaTree)
       })
     },
-    // 获取各个国家的详情数据
+    // 获取各个国家的详情数据 (绘制地图所需数据)
     _getCountryData(data, area) {
       if (area === 'world') {
         return data.filter(d => d.name !== '中国')
@@ -489,17 +505,17 @@ export default {
 
       this.otherCountryInfo = tmp
     },
-    _transformMapData(list) {
+    _transformMapData(list, isTotal = true) {
       return list.map(area => {
         const { confirm, heal, dead } = area.total
         const current = confirm - heal - dead
         const label = {}
-        if (confirm >= 1000) {
+        if ((isTotal && confirm >= 1000) || (!isTotal && current >= 1000)) {
           label.color = '#fff'
         }
         return {
           name: area.name,
-          value: this.activeMapTab === 'total' ? confirm : current,
+          value: isTotal ? confirm : current,
           confirm,
           heal,
           dead,
@@ -512,17 +528,17 @@ export default {
   watch: {
     chinaMapDataOrigin(newMapData) {
       this.chinaMapData = this._transformMapData(newMapData)
-    },
-    activeMapTab(newMapTab, oldMapTab) {
-      if (newMapTab === oldMapTab) {
-        return
-      }
-      this.chinaMapData = this._transformMapData(this.chinaMapDataOrigin)
     }
+    // activeMapTab(newMapTab, oldMapTab) {
+    //   if (newMapTab === oldMapTab) {
+    //     return
+    //   }
+    //   this.chinaMapData = this._transformMapData(this.chinaMapDataOrigin)
+    // }
   },
   components: {
     DataDetail,
-    Tab,
+    // Tab,
     LineChart,
     TableData,
     BaseMap,
