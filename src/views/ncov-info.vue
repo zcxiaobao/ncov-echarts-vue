@@ -1,7 +1,7 @@
 <template>
   <el-row class="ncov-info">
     <!-- 详情 -->
-    <div class="info-detail">
+    <div class="info-detail china-info">
       <el-tabs v-model="activeInfo" type="card" @tab-click="infoTabToggle">
         <el-tab-pane label="全国疫情数据(含港澳台)" name="china">
           <el-row type="flex" class="row-bg" justify="center">
@@ -31,6 +31,24 @@
               ></data-detail>
             </el-col>
           </el-row>
+          <el-row class="cover-time">
+            <span class="time">截至2020-03-06</span>
+            <span class="explain">
+              <i class="el-icon-question"></i>数据说明
+            </span>
+          </el-row>
+          <el-row class="news" v-show="newsData.scrollNewData.length > 0">
+            <el-carousel
+              height="0.6rem"
+              direction="vertical"
+              arrow="never"
+              indicator-position="none"
+            >
+              <el-carousel-item v-for="(con, i) in newsData.scrollNewData" :key="i">
+                <detail-news-card :context="con"></detail-news-card>
+              </el-carousel-item>
+            </el-carousel>
+          </el-row>
         </el-tab-pane>
         <el-tab-pane label="疫情数据" name="local">
           <span slot="label">
@@ -43,43 +61,40 @@
     <!-- 中国疫情 -->
     <div class="china-map-wrap">
       <div class="sec-title">中国疫情</div>
-      <div class="map-wrap">
+      <div class="wrap">
         <tab :activeTab="activeMapTab" @tab-toggle="mapTabToggle" :tabs="mapTabs" class="tab-wrap"></tab>
         <div style="height: 7.00rem">
+          <p class="map-title">中国疫情图</p>
           <base-map area="china" :mapData="chinaMapData" class="map-container"></base-map>
         </div>
         <div class="line-chart-wrapper">
-          <el-carousel height="6.00rem" :autoplay="false" arrow="always">
+          <el-carousel height="6.00rem" :autoplay="false" arrow="always" indicator-position="none">
             <el-carousel-item>
               <h2 class="module-title">全国疫情新增趋势</h2>
-              <div class="line-item-wrap">
-                <line-chart
-                  :isTotal="false"
-                  :textData="textData.ncovAddText"
-                  :mapData="ncovAllData"
-                  class="line-item-wrap"
-                ></line-chart>
-              </div>
+              <!-- <div class="line-item-wrap"> -->
+              <line-chart
+                :isTotal="false"
+                :textData="textData.ncovAddText"
+                :mapData="ncovAllData"
+                class="line-item-wrap"
+              ></line-chart>
+              <!-- </div> -->
             </el-carousel-item>
             <el-carousel-item>
               <h2 class="module-title">全国确诊/疑似/重症趋势</h2>
-              <div class="line-item-wrap">
-                <line-chart
-                  :textData="textData.ncovTotalText"
-                  :mapData="ncovAllData"
-                  class="line-item-wrap"
-                ></line-chart>
-              </div>
+              <line-chart
+                :textData="textData.ncovTotalText"
+                :mapData="ncovAllData"
+                class="line-item-wrap"
+              ></line-chart>
             </el-carousel-item>
             <el-carousel-item>
               <h2 class="module-title">全国累计治愈/死亡趋势</h2>
-              <div class="line-item-wrap">
-                <line-chart
-                  :textData="textData.ncovHealDeadText"
-                  :mapData="ncovAllData"
-                  class="line-item-wrap"
-                ></line-chart>
-              </div>
+              <line-chart
+                :textData="textData.ncovHealDeadText"
+                :mapData="ncovAllData"
+                class="line-item-wrap"
+              ></line-chart>
             </el-carousel-item>
           </el-carousel>
         </div>
@@ -120,106 +135,119 @@
       </div>
     </div>
     <!-- 世界疫情 -->
-    <div class="other-country-wrap map-wrap">
+    <div class="other-country-wrap">
       <div class="sec-title">海外疫情</div>
-      <div class="info-detail">
-        <el-row type="flex" class="row-bg" justify="center">
-          <el-col :span="6">
-            <data-detail title="累计确诊" :data="otherCountryInfo.confirm" clsType="confirm"></data-detail>
-          </el-col>
-          <el-col :span="6">
-            <data-detail title="现存确诊" :data="otherCountryInfo.current" clsType="heal"></data-detail>
-          </el-col>
-          <el-col :span="6">
-            <data-detail title="累计死亡" :data="otherCountryInfo.dead" clsType="dead"></data-detail>
-          </el-col>
-          <el-col :span="6">
-            <data-detail
-              title="累计治愈"
-              :data="otherCountryInfo.heal"
-              :isNeedBorder="false"
-              clsType="heal"
-            ></data-detail>
-          </el-col>
-        </el-row>
-      </div>
-      <div class="line-chart-wrapper">
-        <el-carousel height="7.00rem" :autoplay="false" arrow="always">
-          <el-carousel-item>
-            <base-map :mapData="worldMapData" area="world" :showLabel="false" class="map-container"></base-map>
-          </el-carousel-item>
-          <el-carousel-item>
-            <base-map :mapData="italyMapData" area="italy" class="map-container"></base-map>
-          </el-carousel-item>
-          <el-carousel-item>
-            <base-map :mapData="koreaMapData" area="korea" class="map-container"></base-map>
-          </el-carousel-item>
-          <el-carousel-item>
-            <base-map :mapData="iranMapData" area="iran" class="map-container"></base-map>
-          </el-carousel-item>
-          <el-carousel-item>
-            <base-map :mapData="japanMapData" area="japan" class="map-container"></base-map>
-          </el-carousel-item>
-        </el-carousel>
-      </div>
-      <div class="line-chart-wrapper">
-        <el-carousel height="6.00rem" :autoplay="false" arrow="always">
-          <el-carousel-item>
-            <h2 class="module-title">意大利疫情趋势</h2>
-            <div class="line-item-wrap">
-              <line-chart
-                :textData="textData.otherRegionText"
-                :mapData="region.italy"
-                class="line-item-wrap"
-              ></line-chart>
-            </div>
-          </el-carousel-item>
-          <el-carousel-item>
-            <h2 class="module-title">伊朗趋势</h2>
-            <div class="line-item-wrap">
-              <line-chart
-                :textData="textData.otherRegionText"
-                :mapData="region.iran"
-                class="line-item-wrap"
-              ></line-chart>
-            </div>
-          </el-carousel-item>
-          <el-carousel-item>
-            <h2 class="module-title">韩国疫情趋势</h2>
-            <div class="line-item-wrap">
-              <line-chart
-                :textData="textData.otherRegionText"
-                :mapData="region.korea"
-                class="line-item-wrap"
-              ></line-chart>
-            </div>
-          </el-carousel-item>
-          <el-carousel-item>
-            <h2 class="module-title">日本疫情趋势</h2>
-            <div class="line-item-wrap">
-              <line-chart
-                :textData="textData.otherRegionText"
-                :mapData="region.japan"
-                class="line-item-wrap"
-              ></line-chart>
-            </div>
-          </el-carousel-item>
-        </el-carousel>
-      </div>
-      <div class="china-table">
-        <h2 class="module-title">海外病例</h2>
-        <table-data :tableData="tableData.world"></table-data>
+      <div class="wrap">
+        <div class="info-detail">
+          <el-row type="flex" class="row-bg" justify="center">
+            <el-col :span="6">
+              <data-detail title="累计确诊" :data="otherCountryInfo.confirm" clsType="confirm"></data-detail>
+            </el-col>
+            <el-col :span="6">
+              <data-detail title="现存确诊" :data="otherCountryInfo.current" clsType="current"></data-detail>
+            </el-col>
+            <el-col :span="6">
+              <data-detail title="累计死亡" :data="otherCountryInfo.dead" clsType="dead"></data-detail>
+            </el-col>
+            <el-col :span="6">
+              <data-detail
+                title="累计治愈"
+                :data="otherCountryInfo.heal"
+                :isNeedBorder="false"
+                clsType="heal"
+              ></data-detail>
+            </el-col>
+          </el-row>
+          <el-row class="cover-time">
+            <span class="time">截至2020-03-06</span>
+            <span class="explain">
+              <i class="el-icon-question"></i>数据说明
+            </span>
+          </el-row>
+        </div>
+        <div class="line-chart-wrapper">
+          <el-carousel height="7.00rem" :autoplay="false" arrow="always">
+            <el-carousel-item>
+              <base-map
+                :mapData="worldMapData"
+                area="world"
+                :showLabel="false"
+                class="map-container"
+              ></base-map>
+            </el-carousel-item>
+            <el-carousel-item>
+              <base-map :mapData="italyMapData" area="italy" class="map-container"></base-map>
+            </el-carousel-item>
+            <el-carousel-item>
+              <base-map :mapData="koreaMapData" area="korea" class="map-container"></base-map>
+            </el-carousel-item>
+            <el-carousel-item>
+              <base-map :mapData="iranMapData" area="iran" class="map-container"></base-map>
+            </el-carousel-item>
+            <el-carousel-item>
+              <base-map :mapData="japanMapData" area="japan" class="map-container"></base-map>
+            </el-carousel-item>
+          </el-carousel>
+        </div>
+        <div class="line-chart-wrapper">
+          <el-carousel height="6.00rem" :autoplay="false" arrow="always">
+            <el-carousel-item>
+              <h2 class="module-title">意大利疫情趋势</h2>
+              <div class="line-item-wrap">
+                <line-chart
+                  :textData="textData.otherRegionText"
+                  :mapData="region.italy"
+                  class="line-item-wrap"
+                ></line-chart>
+              </div>
+            </el-carousel-item>
+            <el-carousel-item>
+              <h2 class="module-title">伊朗趋势</h2>
+              <div class="line-item-wrap">
+                <line-chart
+                  :textData="textData.otherRegionText"
+                  :mapData="region.iran"
+                  class="line-item-wrap"
+                ></line-chart>
+              </div>
+            </el-carousel-item>
+            <el-carousel-item>
+              <h2 class="module-title">韩国疫情趋势</h2>
+              <div class="line-item-wrap">
+                <line-chart
+                  :textData="textData.otherRegionText"
+                  :mapData="region.korea"
+                  class="line-item-wrap"
+                ></line-chart>
+              </div>
+            </el-carousel-item>
+            <el-carousel-item>
+              <h2 class="module-title">日本疫情趋势</h2>
+              <div class="line-item-wrap">
+                <line-chart
+                  :textData="textData.otherRegionText"
+                  :mapData="region.japan"
+                  class="line-item-wrap"
+                ></line-chart>
+              </div>
+            </el-carousel-item>
+          </el-carousel>
+        </div>
+        <div class="china-table">
+          <h2 class="module-title">海外病例</h2>
+          <table-data :tableData="tableData.world"></table-data>
+        </div>
       </div>
     </div>
     <!-- 实时播报 -->
-    <div class="realtime">
+    <div class="realtime wrap">
       <div class="sec-title">实时播报</div>
       <div class="timeline-wrap">
         <timeline-wrap :items="newsData.timelineData"></timeline-wrap>
       </div>
     </div>
     <!-- 权威发布 -->
-    <div class="power-report">
+    <div class="power-report wrap">
       <div class="sec-title">权威报告</div>
       <ul>
         <template v-for="(power,i) in newsData.powerData">
@@ -228,7 +256,7 @@
       </ul>
     </div>
     <!-- 前沿知识 -->
-    <div class="paper">
+    <div class="paper wrap">
       <div class="sec-title">前沿知识</div>
       <div class="timeline-wrap">
         <timeline-wrap :items="newsData.paperData"></timeline-wrap>
@@ -245,9 +273,9 @@ import TimelineWrap from '@/components/timeline-wrap'
 import MapInit from '@/components/map/map.vue'
 import LineChart from '@/components/echarts/line'
 import TableData from '@/components/table-data'
-import TableTry from '@/components/table-try'
 import BaseMap from '@/components/echarts/map/map'
 import PowerCard from '@/components/power-card'
+import detailNewsCard from '@/components/detail-news-card'
 import api from '@/api/api.js'
 import echarts from 'echarts'
 import { dataDetailEnum, countryEngName, ncovInfoLoc } from '@/assets/js/config'
@@ -256,6 +284,7 @@ import { buildMapOptions } from '@/assets/js/map-option.js'
 export default {
   data() {
     return {
+      newsHeight: '',
       chinaInfo: {
         confirm: { total: '-', today: '-' },
         suspect: { total: '-', today: '-' },
@@ -272,6 +301,7 @@ export default {
       },
       activeInfo: 'china',
       ncovAllData: null,
+      // 地区趋势数据
       region: {
         hubei: null,
         italy: null,
@@ -279,6 +309,7 @@ export default {
         japan: null,
         iran: null
       },
+      // line折线图基本信息
       textData: {
         ncovAddText: {
           legend: ['确诊', '治愈', '疑似', '死亡'],
@@ -316,14 +347,17 @@ export default {
           dimensions: ['date', 'confirm', 'heal', 'dead']
         }
       },
+      // table渲染数据
       tableData: {
         china: [],
         world: []
       },
+      // 新闻数据  权威 实时播报 论文 滑动新闻
       newsData: {
         powerData: [],
         timelineData: [],
-        paperData: []
+        paperData: [],
+        scrollNewData: []
       },
       chinaMapData: [],
       chinaMapDataOrigin: [],
@@ -349,10 +383,8 @@ export default {
     api.getVirusReport().then(res => {
       this.$set(this.newsData, 'powerData', res.power)
       this.$set(this.newsData, 'paperData', res.papers)
+      this.$set(this.newsData, 'scrollNewData', res.scrollNews)
     })
-    // api.getIpLoc().then(res => {
-    //   console.log(res)
-    // })
   },
   methods: {
     mapTabToggle(tab) {
@@ -361,14 +393,15 @@ export default {
     infoTabToggle(tab) {
       this.activeInfo = tab.name
     },
+    // 获取实时播报
     _getNormalList() {
       api.getNormalList().then(({ code, data }) => {
         if (code === 0) {
           this.$set(this.newsData, 'timelineData', data.items.slice(0, 15))
-          // this.timelineData = data && data.items.slice(0, 15)
         }
       })
     },
+    // 获取疫情数据
     _getChinaTotalData() {
       api.getChinaTotalData().then(({ data }) => {
         this._normallizeData(data.chinaTotal)
@@ -396,6 +429,7 @@ export default {
         this.worldMapData = this._transformMapData(data.areaTree)
       })
     },
+    // 获取各个国家的详情数据
     _getCountryData(data, area) {
       if (area === 'world') {
         return data.filter(d => d.name !== '中国')
@@ -493,7 +527,8 @@ export default {
     TableData,
     BaseMap,
     TimelineWrap,
-    PowerCard
+    PowerCard,
+    detailNewsCard
   }
 }
 </script>
@@ -505,17 +540,41 @@ export default {
   width: 100%;
   left: 50%;
   transform: translate3d(-50%, 0, 0);
-  // padding: 20rem;
   box-sizing: border-box;
   background-color: #fff;
   top: 0.6rem;
+  .china-info {
+    .cover-time {
+      border-bottom: 1px solid #e8e8e8;
+    }
+  }
   .info-detail {
-    // width: 100%;
-    box-shadow: 0 0.02rem 0.2rem rgba(0, 0, 0, 0.1);
+    box-shadow: 0 0 0.2rem rgba(0, 0, 0, 0.1);
     background-color: #fff;
     border-radius: 0.16rem;
-    margin: 0.3rem;
+    margin: 0.3rem auto 0.4rem;
+    min-height: 2.3rem;
+    font-size: 0;
     overflow: hidden;
+    .cover-time {
+      padding: 0.22rem 0;
+      margin: 0 0.32rem;
+      font-size: 0.22rem;
+      color: #a9a9a9;
+      clear: both;
+      font-weight: 400;
+      .explain {
+        float: right;
+        i {
+          margin-right: 0.04rem;
+        }
+      }
+    }
+    .news {
+      height: 0.6rem;
+      margin: 0.13rem 0.32rem 0.15rem;
+      overflow: hidden;
+    }
     /deep/ .el-tabs--card > .el-tabs__header {
       .el-tabs__nav {
         border: none;
@@ -546,7 +605,7 @@ export default {
       margin: 0;
     }
   }
-  .map-wrap {
+  .wrap {
     position: relative;
     padding: 0 0.32rem;
     .tab-wrap {
@@ -572,11 +631,10 @@ export default {
     position: relative;
     overflow: hidden;
     height: 100%;
-
     .line-item-wrap {
       height: 5rem;
       border: 0.01rem solid #eee;
-      background: #f2f2f2;
+      // background: #f2f2f2;
       box-sizing: border-box;
     }
   }
@@ -589,22 +647,42 @@ export default {
     margin-bottom: 0.2rem;
   }
   .sec-title {
-    height: 0.75rem;
-    border-bottom: 0.02rem solid #eee;
+    height: 0.94rem;
+    border-bottom: 2px solid #eee;
     padding-left: 0.58rem;
     position: relative;
     font-weight: 500;
-    font-size: 0.28rem;
-    line-height: 0.75rem;
+    font-size: 0.32rem;
+    line-height: 0.94rem;
     color: #333;
+    margin-bottom: 0.32rem;
     &::before {
       content: '';
-      width: 0.06rem;
+      width: 0.08rem;
       height: 0.32rem;
       background-color: #e10000;
       position: absolute;
       left: 0.32rem;
       top: calc(50% - 0.16rem);
+    }
+  }
+  .map-title {
+    position: absolute;
+    left: 0.4rem;
+    top: 0.4rem;
+    padding-left: 0.3rem;
+    font-size: 0.26rem;
+    line-height: 1;
+    color: #333;
+    z-index: 10;
+    &::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 0.05rem;
+      width: 0.16rem;
+      height: 0.16rem;
+      background: #e10000;
     }
   }
 }

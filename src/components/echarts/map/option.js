@@ -26,10 +26,10 @@ export default () => {
           fontSize: '0.16rem'
         },
         data: null,
-        top: '5%',
-        left: '8%',
-        bottom: '20%',
-        right: '5%'
+        top: '12%',
+        left: '3%',
+        bottom: '18%',
+        right: '3%'
       }
     ],
     visualMap: {
@@ -42,7 +42,7 @@ export default () => {
       bottom: '0.10rem',
       left: '0.20rem',
       textStyle: {
-        fontSize: '0.20rem'
+        fontSize: '0.16rem'
       }
     }
   }

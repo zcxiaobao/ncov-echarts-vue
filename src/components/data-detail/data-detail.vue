@@ -1,10 +1,10 @@
 <template>
   <div class="detail-wrapper" :class="isNeedBorder? 'border': ''">
-    <el-card :body-style="{ padding: '0.18rem 0.10rem'}" shadow="never">
+    <el-card :body-style="{ padding: '0.18rem 0'}" shadow="never">
       <div class="detail-title">{{title}}</div>
       <div class="detail-number" :class="clsType">{{data.total}}</div>
       <div class="detail-trend" v-show="todayIsShow">
-        昨日
+        <span>昨日</span>
         <span :class="clsType">{{formatNum(data.today)}}</span>
       </div>
     </el-card>
@@ -80,7 +80,7 @@ export default {
     color: #333;
   }
   .detail-number {
-    font: 700 0.3rem/0.64rem DIN Alternate, din_alternate_bold,
+    font: 700 0.36rem/0.74rem DIN Alternate, din_alternate_bold,
       -apple-system-font, system-ui, -apple-system, Segoe UI, Roboto, Ubuntu,
       Cantarell, Noto Sans, sans-serif, Helvetica Neue, PingFang SC,
       Hiragino Sans GB, Microsoft YaHei UI, Microsoft YaHei, Arial;

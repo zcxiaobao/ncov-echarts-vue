@@ -28,7 +28,7 @@ export default {
   },
   data() {
     return {
-      option: { ...getOption() },
+      option: getOption(),
       myChart: null
     }
   },

@@ -7,9 +7,8 @@ export default () => ({
     icon: 'roundRect',
     borderRadius: 5,
     top: '3%',
-    left: '5%',
+    // left: '5%',
     textStyle: {
-      // fontWeight: 'bold',
       fontSize: '0.28rem',
       fontFamily: `-apple-system-font, system-ui, -apple-system, Segoe UI,
       Roboto, Ubuntu, Cantarell, Noto Sans, sans-serif, Helvetica Neue,
@@ -38,10 +37,6 @@ export default () => ({
     axisLabel: {
       rotate: 45,
       color: '#777',
-      fontFamily: `-apple-system-font, system-ui, -apple-system, Segoe UI,
-      Roboto, Ubuntu, Cantarell, Noto Sans, sans-serif, Helvetica Neue,
-      PingFang SC, Hiragino Sans GB, Microsoft YaHei UI, Microsoft YaHei,
-      Arial`,
       fontSize: '0.12rem',
       fontWeight: 'bold',
       interval: 2,
