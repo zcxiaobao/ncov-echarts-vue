@@ -1,3 +1,11 @@
+/*
+ * @Descripttion:
+ * @version:
+ * @Author: zcxiaobao
+ * @Date: 2020-02-18 12:18:33
+ * @LastEditors: zcxiaobao
+ * @LastEditTime: 2020-03-26 17:18:35
+ */
 const chinaPieces = [
   {
     gt: 9999,
@@ -83,7 +91,7 @@ const provincePieces = [
   }
 ]
 export const buildVisualMap = function(province) {
-  return province === 'china' || province === 'world'
+  return province === 'china' || province === 'world' || province === 'italy'
     ? chinaPieces
     : provincePieces
 }

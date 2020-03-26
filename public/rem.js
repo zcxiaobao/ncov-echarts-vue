@@ -1,3 +1,11 @@
+/*
+ * @Descripttion:
+ * @version:
+ * @Author: zcxiaobao
+ * @Date: 2020-03-24 16:48:36
+ * @LastEditors: zcxiaobao
+ * @LastEditTime: 2020-03-26 16:24:30
+ */
 // ;(function(doc, win, designWidth) {
 //   var html = doc.documentElement
 //   function refreshRem() {
@@ -15,7 +23,6 @@
   var docEl = doc.documentElement
   var resizeEvt = 'orientationchange' in window ? 'orientationchange' : 'resize'
   var recalc = function() {
-    console.log('resize')
     var clientWidth = docEl.clientWidth
     var clientHeight = docEl.clientHeight
     if (!clientWidth) return

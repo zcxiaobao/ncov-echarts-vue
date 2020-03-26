@@ -1,3 +1,11 @@
+<!--
+ * @Descripttion:
+ * @version:
+ * @Author: zcxiaobao
+ * @Date: 2020-03-20 13:35:48
+ * @LastEditors: zcxiaobao
+ * @LastEditTime: 2020-03-26 17:17:12
+ -->
 <template>
   <div class="china-map" id="china-map" ref="chart"></div>
 </template>
@@ -57,6 +65,14 @@ export default {
       }
       this.setOptionRem()
       this.option.series[0].map = this.area
+      if (this.area === 'japan') {
+        this.option.series[0].left = '10%'
+        this.option.series[0].right = '10%'
+        this.option.series[0].bottom = '5%'
+        this.option.series[0].top = '5%'
+        this.option.visualMap.top = '12%'
+        this.option.visualMap.bottom = 'none'
+      }
       this.option.series[0].nameMap = countryNameMap[this.area]
       this.option.series[0].label.show = this.showLabel
       this.option.series[0].label.fontSize = rem2px(

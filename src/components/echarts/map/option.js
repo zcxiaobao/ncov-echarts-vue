@@ -1,3 +1,11 @@
+/*
+ * @Descripttion:
+ * @version:
+ * @Author: zcxiaobao
+ * @Date: 2020-03-20 13:35:48
+ * @LastEditors: zcxiaobao
+ * @LastEditTime: 2020-03-26 17:11:20
+ */
 export default () => {
   const option = {
     tooltip: {
@@ -23,7 +31,7 @@ export default () => {
           show: true,
           position: 'inside',
           align: 'center',
-          fontSize: '0.16rem'
+          fontSize: '0.12rem'
         },
         data: null,
         top: '12%',

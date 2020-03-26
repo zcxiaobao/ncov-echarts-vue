@@ -44,10 +44,7 @@ export default {
       return this.activeTab === 'total'
     }
   },
-  created() {
-    console.log(this.area)
-    console.log(this.isProvince)
-  },
+  created() {},
   mounted() {
     setTimeout(() => {
       this._initEcharts()

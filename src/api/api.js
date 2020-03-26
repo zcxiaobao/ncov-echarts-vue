@@ -41,7 +41,7 @@ const provinces = {
 }
 axios.jsonp = (url, callback = 'callback') => {
   if (!url) {
-    console.error('Axios.JSONP 至少需要一个url参数!')
+    // console.error('Axios.JSONP 至少需要一个url参数!')
     return
   }
   return new Promise((resolve, reject) => {
