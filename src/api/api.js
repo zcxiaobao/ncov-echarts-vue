@@ -1,5 +1,6 @@
 import axios from '@/axios.js'
 import { getDate } from '@/assets/js/util.js'
+import jsonp from '@/assets/js/jsonp'
 const provinces = {
   // 23个省
   中国: 'china',
@@ -38,18 +39,18 @@ const provinces = {
   香港: 'xianggang',
   澳门: 'aomen'
 }
-axios.jsonp = url => {
+axios.jsonp = (url, callback = 'callback') => {
   if (!url) {
     console.error('Axios.JSONP 至少需要一个url参数!')
     return
   }
   return new Promise((resolve, reject) => {
-    window.callback = result => {
+    window[callback] = result => {
       resolve(result)
     }
     var JSONP = document.createElement('script')
     JSONP.type = 'text/javascript'
-    JSONP.src = `${url}&callback=callback`
+    JSONP.src = `${url}&callback=${callback}`
     document.getElementsByTagName('head')[0].appendChild(JSONP)
     setTimeout(() => {
       document.getElementsByTagName('head')[0].removeChild(JSONP)
@@ -132,6 +133,13 @@ const api = {
   getVirusReport() {
     return axios.jsonp(
       `https://ent.163.com/special/00035080/virus_report_data.js?_=${+new Date()}`
+    )
+  },
+  getIpLoc() {
+    return jsonp(
+      'https://ipservice.3g.163.com/ip',
+      { _: `${+new Date()}` }
+      // { prefix: 'Zepto', name: 'Zepto' + +new Date() }
     )
   }
 }

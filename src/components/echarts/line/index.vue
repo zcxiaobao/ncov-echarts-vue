@@ -4,6 +4,7 @@
 
 <script>
 import { workflow, drawChart } from '../echarts.config'
+import { rem2px } from '@/assets/js/util.js'
 import getOption from './option'
 const line = null
 export default {
@@ -47,8 +48,15 @@ export default {
     initXAxis(data) {
       this.option.xAxis.data = data.chinaDayList.map(d => d.date)
     },
+    setOptionRem() {
+      const { legend, xAxis, yAxis } = this.option
+      this.option.legend.textStyle.fontSize = rem2px(legend.textStyle.fontSize)
+      this.option.xAxis.axisLabel.fontSize = rem2px(xAxis.axisLabel.fontSize)
+      this.option.yAxis.axisLabel.fontSize = rem2px(yAxis.axisLabel.fontSize)
+    },
     setSeriesData(data) {
       // this.initXAxis(data)
+      this.setOptionRem()
       this.option.series = this.option.legend.data.map(name => ({
         name,
         type: 'line',
@@ -83,6 +91,7 @@ export default {
     },
     setSeriesDataByAssist(mainData, assistData) {
       this.initXAxis(mainData)
+      this.setOptionRem()
       this.option.series = this.option.legend.data.map(name => ({
         name,
         type: 'line',

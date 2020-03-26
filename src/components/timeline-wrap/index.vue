@@ -31,32 +31,32 @@ export default {
   &::before {
     content: '';
     position: absolute;
-    top: 32px;
-    left: 5px;
-    width: 4px;
+    top: 0.32rem;
+    left: 0.05rem;
+    width: 0.04rem;
     height: 100%;
     background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAQAAAAQAQMAAAALeEywAAAABlBMVEUAAADd3d3swgqXAAAAAXRSTlMAQObYZgAAAA1JREFUCNdjSMACkQAAUqADwbjktIgAAAAASUVORK5CYII=)
       repeat-y;
   }
   .timeline-item {
     position: relative;
-    padding-left: 32px;
+    padding-left: 0.32rem;
     .con {
       position: relative;
     }
     .timestamp {
-      padding: 24px 0;
-      font-size: 30px;
-      line-height: 30px;
+      padding: 0.24rem 0;
+      font-size: 0.3rem;
+      line-height: 0.3rem;
       position: relative;
       &::before {
         content: '';
-        width: 15px;
-        height: 15px;
+        width: 0.15rem;
+        height: 0.15rem;
         background-color: #f00;
         position: absolute;
-        top: 31.5px;
-        left: -32px;
+        top: 0.315rem;
+        left: -0.32rem;
       }
     }
   }

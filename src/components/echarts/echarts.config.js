@@ -19,7 +19,9 @@ export const drawChart = async self => {
       self.setSeriesDataByAssist(self.mapData, self.assistData)
     }
   } else {
-    self.setSeriesData(self.mapData)
+    if (self.mapData) {
+      self.setSeriesData(self.mapData)
+    }
     // self.myChart.setOption(self.option)
     // self.myChart.hideLoading()
   }

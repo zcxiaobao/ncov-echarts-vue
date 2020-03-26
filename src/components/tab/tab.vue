@@ -44,19 +44,19 @@ export default {
 <style lang='less' scoped>
 .ncov-tab {
   // position: absolute;
-  // top: 5px;
+  // top: 5rem;
   // left: 50%;
   // transform: translate3d(-50%, 0, 0);
   /deep/ .el-tabs__item {
     color: #666;
-    height: 36px;
-    line-height: 36px;
+    height: 0.36rem;
+    line-height: 0.36rem;
     background: #f7f7f7;
-    border-radius: 2px;
+    border-radius: 0.02rem;
     &.is-active {
       color: #4169e2;
       background: #f1f5ff;
-      border-bottom: 1px solid transparent !important;
+      border-bottom: 0.01rem solid transparent !important;
     }
   }
 }

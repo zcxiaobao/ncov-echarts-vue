@@ -1,6 +1,6 @@
 <template>
   <div class="detail-wrapper" :class="isNeedBorder? 'border': ''">
-    <el-card :body-style="{ padding: '18px 10px'}" shadow="never">
+    <el-card :body-style="{ padding: '0.18rem 0.10rem'}" shadow="never">
       <div class="detail-title">{{title}}</div>
       <div class="detail-number" :class="clsType">{{data.total}}</div>
       <div class="detail-trend" v-show="todayIsShow">
@@ -65,31 +65,31 @@ export default {
       content: '';
       position: absolute;
       right: 0;
-      top: calc(50% - 15px);
-      width: 1px;
-      height: 30px;
+      top: calc(50% - 0.15rem);
+      width: 0.01rem;
+      height: 0.3rem;
       background: #e8e8e8;
     }
   }
   .detail-title {
     text-align: center;
-    font: 20px/24px -apple-system-font, system-ui, -apple-system, Segoe UI,
+    font: 0.2rem/0.24rem -apple-system-font, system-ui, -apple-system, Segoe UI,
       Roboto, Ubuntu, Cantarell, Noto Sans, sans-serif, Helvetica Neue,
       PingFang SC, Hiragino Sans GB, Microsoft YaHei UI, Microsoft YaHei, Arial;
     font-weight: 600;
     color: #333;
   }
   .detail-number {
-    font: 700 30px/64px DIN Alternate, din_alternate_bold, -apple-system-font,
-      system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, Noto Sans,
-      sans-serif, Helvetica Neue, PingFang SC, Hiragino Sans GB,
-      Microsoft YaHei UI, Microsoft YaHei, Arial;
+    font: 700 0.3rem/0.64rem DIN Alternate, din_alternate_bold,
+      -apple-system-font, system-ui, -apple-system, Segoe UI, Roboto, Ubuntu,
+      Cantarell, Noto Sans, sans-serif, Helvetica Neue, PingFang SC,
+      Hiragino Sans GB, Microsoft YaHei UI, Microsoft YaHei, Arial;
     text-align: center;
   }
   .detail-trend {
-    font: 16px/1 -apple-system-font, system-ui, -apple-system, Segoe UI, Roboto,
-      Ubuntu, Cantarell, Noto Sans, sans-serif, Helvetica Neue, PingFang SC,
-      Hiragino Sans GB, Microsoft YaHei UI, Microsoft YaHei, Arial;
+    font: 0.16rem/1 -apple-system-font, system-ui, -apple-system, Segoe UI,
+      Roboto, Ubuntu, Cantarell, Noto Sans, sans-serif, Helvetica Neue,
+      PingFang SC, Hiragino Sans GB, Microsoft YaHei UI, Microsoft YaHei, Arial;
     color: #999;
     text-align: center;
   }

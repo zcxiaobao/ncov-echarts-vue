@@ -10,7 +10,7 @@ export default () => ({
     left: '5%',
     textStyle: {
       // fontWeight: 'bold',
-      fontSize: 28,
+      fontSize: '0.28rem',
       fontFamily: `-apple-system-font, system-ui, -apple-system, Segoe UI,
       Roboto, Ubuntu, Cantarell, Noto Sans, sans-serif, Helvetica Neue,
       PingFang SC, Hiragino Sans GB, Microsoft YaHei UI, Microsoft YaHei,
@@ -42,7 +42,7 @@ export default () => ({
       Roboto, Ubuntu, Cantarell, Noto Sans, sans-serif, Helvetica Neue,
       PingFang SC, Hiragino Sans GB, Microsoft YaHei UI, Microsoft YaHei,
       Arial`,
-      fontSize: 12,
+      fontSize: '0.12rem',
       fontWeight: 'bold',
       interval: 2,
       formatter: value => {
@@ -64,7 +64,7 @@ export default () => ({
       Roboto, Ubuntu, Cantarell, Noto Sans, sans-serif, Helvetica Neue,
       PingFang SC, Hiragino Sans GB, Microsoft YaHei UI, Microsoft YaHei,
       Arial`,
-      fontSize: 15,
+      fontSize: '0.15rem',
       fontWeight: 'bold'
     }
   },

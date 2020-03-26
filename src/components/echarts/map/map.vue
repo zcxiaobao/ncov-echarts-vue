@@ -9,6 +9,7 @@ import getOption from './option.js'
 import { drawChart, workflow } from '../echarts.config'
 import { buildVisualMap } from '@/assets/js/map-visualMap'
 import { countryNameMap } from '@/assets/js/country'
+import { rem2px } from '@/assets/js/util.js'
 export default {
   props: {
     mapData: {
@@ -27,7 +28,7 @@ export default {
   },
   data() {
     return {
-      option: getOption(),
+      option: { ...getOption() },
       myChart: null
     }
   },
@@ -40,11 +41,28 @@ export default {
     setOptionText() {
       this.option.visualMap.pieces = buildVisualMap(this.area)
     },
+    setOptionRem() {
+      const { visualMap } = this.option
+      this.option.visualMap.itemWidth = rem2px(visualMap.itemWidth)
+      this.option.visualMap.itemHeight = rem2px(visualMap.itemHeight)
+      this.option.visualMap.bottom = rem2px(visualMap.bottom)
+      this.option.visualMap.left = rem2px(visualMap.left)
+      this.option.visualMap.textStyle.fontSize = rem2px(
+        visualMap.textStyle.fontSize
+      )
+    },
     setSeriesData(mapData) {
+      if (!mapData.length) {
+        return
+      }
+      this.setOptionRem()
       this.option.series[0].map = this.area
       this.option.series[0].nameMap = countryNameMap[this.area]
       this.option.series[0].label.show = this.showLabel
-      this.option.series[0].zoom = 1.15
+      this.option.series[0].label.fontSize = rem2px(
+        this.option.series[0].label.fontSize
+      )
+      // this.option.series[0].zoom = 1.15
       this._renderMap(this.area, mapData)
     },
     _renderMap(area, mapData) {

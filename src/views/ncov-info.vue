@@ -32,84 +32,91 @@
             </el-col>
           </el-row>
         </el-tab-pane>
-        <el-tab-pane label="疫情数据" name="local">山东</el-tab-pane>
+        <el-tab-pane label="疫情数据" name="local">
+          <span slot="label">
+            <i class="el-icon-location-outline"></i> 我的行程
+          </span>
+          我的行程
+        </el-tab-pane>
       </el-tabs>
     </div>
     <!-- 中国疫情 -->
-    <div class="china-map-wrap map-wrap">
+    <div class="china-map-wrap">
       <div class="sec-title">中国疫情</div>
-      <tab :activeTab="activeMapTab" @tab-toggle="mapTabToggle" :tabs="mapTabs" class="tab-wrap"></tab>
-      <div style="height: 700px">
-        <base-map area="china" :mapData="chinaMapData" class="map-container"></base-map>
-      </div>
-      <div class="line-chart-wrapper">
-        <el-carousel height="600px" :autoplay="false" arrow="always">
-          <el-carousel-item>
-            <h2 class="module-title">全国疫情新增趋势</h2>
-            <div class="line-item-wrap">
-              <line-chart
-                :isTotal="false"
-                :textData="textData.ncovAddText"
-                :mapData="ncovAllData"
-                class="line-item-wrap"
-              ></line-chart>
-            </div>
-          </el-carousel-item>
-          <el-carousel-item>
-            <h2 class="module-title">全国确诊/疑似/重症趋势</h2>
-            <div class="line-item-wrap">
-              <line-chart
-                :textData="textData.ncovTotalText"
-                :mapData="ncovAllData"
-                class="line-item-wrap"
-              ></line-chart>
-            </div>
-          </el-carousel-item>
-          <el-carousel-item>
-            <h2 class="module-title">全国累计治愈/死亡趋势</h2>
-            <div class="line-item-wrap">
-              <line-chart
-                :textData="textData.ncovHealDeadText"
-                :mapData="ncovAllData"
-                class="line-item-wrap"
-              ></line-chart>
-            </div>
-          </el-carousel-item>
-        </el-carousel>
-      </div>
-      <div class="line-chart-wrapper">
-        <el-carousel height="600px" :autoplay="false" arrow="always">
-          <el-carousel-item>
-            <h2 class="module-title">全国/湖北/非湖北累计确诊对比</h2>
-            <div class="line-item-wrap">
-              <line-chart
-                :isTotal="false"
-                :isNeedAssist="true"
-                :textData="textData.regionTotalText"
-                :mapData="ncovAllData"
-                :assistData="region.hubei"
-                class="line-item-wrap"
-              ></line-chart>
-            </div>
-          </el-carousel-item>
-          <el-carousel-item>
-            <h2 class="module-title">全国/湖北/非湖北新增确诊对比</h2>
-            <div class="line-item-wrap">
-              <line-chart
-                :isTotal="false"
-                :isNeedAssist="true"
-                :textData="textData.regionAddText"
-                :mapData="ncovAllData"
-                :assistData="region.hubei"
-                class="line-item-wrap"
-              ></line-chart>
-            </div>
-          </el-carousel-item>
-        </el-carousel>
-      </div>
-      <div class="china-table">
-        <h2 class="module-title">中国病例</h2>
-        <table-data :tableData="chinaMapDataOrigin"></table-data>
+      <div class="map-wrap">
+        <tab :activeTab="activeMapTab" @tab-toggle="mapTabToggle" :tabs="mapTabs" class="tab-wrap"></tab>
+        <div style="height: 7.00rem">
+          <base-map area="china" :mapData="chinaMapData" class="map-container"></base-map>
+        </div>
+        <div class="line-chart-wrapper">
+          <el-carousel height="6.00rem" :autoplay="false" arrow="always">
+            <el-carousel-item>
+              <h2 class="module-title">全国疫情新增趋势</h2>
+              <div class="line-item-wrap">
+                <line-chart
+                  :isTotal="false"
+                  :textData="textData.ncovAddText"
+                  :mapData="ncovAllData"
+                  class="line-item-wrap"
+                ></line-chart>
+              </div>
+            </el-carousel-item>
+            <el-carousel-item>
+              <h2 class="module-title">全国确诊/疑似/重症趋势</h2>
+              <div class="line-item-wrap">
+                <line-chart
+                  :textData="textData.ncovTotalText"
+                  :mapData="ncovAllData"
+                  class="line-item-wrap"
+                ></line-chart>
+              </div>
+            </el-carousel-item>
+            <el-carousel-item>
+              <h2 class="module-title">全国累计治愈/死亡趋势</h2>
+              <div class="line-item-wrap">
+                <line-chart
+                  :textData="textData.ncovHealDeadText"
+                  :mapData="ncovAllData"
+                  class="line-item-wrap"
+                ></line-chart>
+              </div>
+            </el-carousel-item>
+          </el-carousel>
+        </div>
+        <div class="line-chart-wrapper">
+          <el-carousel height="6.00rem" :autoplay="false" arrow="always">
+            <el-carousel-item>
+              <h2 class="module-title">全国/湖北/非湖北累计确诊对比</h2>
+              <div class="line-item-wrap">
+                <line-chart
+                  :isTotal="false"
+                  :isNeedAssist="true"
+                  :textData="textData.regionTotalText"
+                  :mapData="ncovAllData"
+                  :assistData="region.hubei"
+                  class="line-item-wrap"
+                ></line-chart>
+              </div>
+            </el-carousel-item>
+            <el-carousel-item>
+              <h2 class="module-title">全国/湖北/非湖北新增确诊对比</h2>
+              <div class="line-item-wrap">
+                <line-chart
+                  :isTotal="false"
+                  :isNeedAssist="true"
+                  :textData="textData.regionAddText"
+                  :mapData="ncovAllData"
+                  :assistData="region.hubei"
+                  class="line-item-wrap"
+                ></line-chart>
+              </div>
+            </el-carousel-item>
+          </el-carousel>
+        </div>
+        <div class="china-table">
+          <h2 class="module-title">中国病例</h2>
+          <table-data :tableData="chinaMapDataOrigin"></table-data>
+        </div>
       </div>
     </div>
     <!-- 世界疫情 -->
@@ -137,7 +144,7 @@
         </el-row>
       </div>
       <div class="line-chart-wrapper">
-        <el-carousel height="700px" :autoplay="false" arrow="always">
+        <el-carousel height="7.00rem" :autoplay="false" arrow="always">
           <el-carousel-item>
             <base-map :mapData="worldMapData" area="world" :showLabel="false" class="map-container"></base-map>
           </el-carousel-item>
@@ -156,7 +163,7 @@
         </el-carousel>
       </div>
       <div class="line-chart-wrapper">
-        <el-carousel height="600px" :autoplay="false" arrow="always">
+        <el-carousel height="6.00rem" :autoplay="false" arrow="always">
           <el-carousel-item>
             <h2 class="module-title">意大利疫情趋势</h2>
             <div class="line-item-wrap">
@@ -343,6 +350,9 @@ export default {
       this.$set(this.newsData, 'powerData', res.power)
       this.$set(this.newsData, 'paperData', res.papers)
     })
+    // api.getIpLoc().then(res => {
+    //   console.log(res)
+    // })
   },
   methods: {
     mapTabToggle(tab) {
@@ -491,45 +501,46 @@ export default {
 <style lang='less' scoped>
 .ncov-info {
   position: absolute;
-  width: 750px;
+  max-width: 750px;
+  width: 100%;
   left: 50%;
   transform: translate3d(-50%, 0, 0);
-  min-width: 750px;
-  padding: 20px;
+  // padding: 20rem;
   box-sizing: border-box;
   background-color: #fff;
-  top: 60px;
+  top: 0.6rem;
   .info-detail {
-    width: 100%;
-    box-shadow: 0 2px 20px rgba(0, 0, 0, 0.1);
+    // width: 100%;
+    box-shadow: 0 0.02rem 0.2rem rgba(0, 0, 0, 0.1);
     background-color: #fff;
-    border-radius: 16px;
+    border-radius: 0.16rem;
+    margin: 0.3rem;
     overflow: hidden;
     /deep/ .el-tabs--card > .el-tabs__header {
       .el-tabs__nav {
         border: none;
         width: 100%;
         overflow: hidden;
-        border-top-left-radius: 16px;
-        border-top-right-radius: 16px;
+        border-top-left-radius: 0.16rem;
+        border-top-right-radius: 0.16rem;
       }
       .el-tabs__item {
-        height: 80px;
+        height: 0.8rem;
         width: 50%;
         color: #333;
         text-align: center;
         background: #f1f1f1;
-        font: 26px/80px -apple-system-font, system-ui, -apple-system, Segoe UI,
-          Roboto, Ubuntu, Cantarell, Noto Sans, sans-serif, Helvetica Neue,
-          PingFang SC, Hiragino Sans GB, Microsoft YaHei UI, Microsoft YaHei,
-          Arial;
+        font: 0.26rem/0.8rem -apple-system-font, system-ui, -apple-system,
+          Segoe UI, Roboto, Ubuntu, Cantarell, Noto Sans, sans-serif,
+          Helvetica Neue, PingFang SC, Hiragino Sans GB, Microsoft YaHei UI,
+          Microsoft YaHei, Arial;
         &.is-active {
           background-color: #fff;
         }
       }
     }
     /deep/ .el-tabs__content {
-      padding: 0 20px;
+      padding: 0 0.2rem;
     }
     /deep/ .el-tabs__header {
       margin: 0;
@@ -537,22 +548,22 @@ export default {
   }
   .map-wrap {
     position: relative;
-
+    padding: 0 0.32rem;
     .tab-wrap {
       position: absolute;
-      top: 38px;
-      right: 0px;
+      top: 0.38rem;
+      right: 0rem;
     }
     .china-map {
       width: 100%;
-      height: 450px;
+      height: 4.5rem;
       margin: 0;
       padding: 0;
       position: relative;
     }
     .map-container {
       height: 100%;
-      border: 1px solid #eee;
+      border: 0.01rem solid #eee;
       background: #f2f2f2;
       box-sizing: border-box;
     }
@@ -563,37 +574,37 @@ export default {
     height: 100%;
 
     .line-item-wrap {
-      height: 500px;
-      border: 1px solid #eee;
+      height: 5rem;
+      border: 0.01rem solid #eee;
       background: #f2f2f2;
       box-sizing: border-box;
     }
   }
   .module-title {
     position: relative;
-    font: 28px/60px -apple-system-font, system-ui, -apple-system, Segoe UI,
+    font: 0.28rem/0.6rem -apple-system-font, system-ui, -apple-system, Segoe UI,
       Roboto, Ubuntu, Cantarell, Noto Sans, sans-serif, Helvetica Neue,
       PingFang SC, Hiragino Sans GB, Microsoft YaHei UI, Microsoft YaHei, Arial;
-    margin-top: 10px;
-    margin-bottom: 20px;
+    margin-top: 0.1rem;
+    margin-bottom: 0.2rem;
   }
   .sec-title {
-    height: 75px;
-    border-bottom: 2px solid #eee;
-    padding-left: 58px;
+    height: 0.75rem;
+    border-bottom: 0.02rem solid #eee;
+    padding-left: 0.58rem;
     position: relative;
     font-weight: 500;
-    font-size: 28px;
-    line-height: 75px;
+    font-size: 0.28rem;
+    line-height: 0.75rem;
     color: #333;
     &::before {
       content: '';
-      width: 6px;
-      height: 32px;
+      width: 0.06rem;
+      height: 0.32rem;
       background-color: #e10000;
       position: absolute;
-      left: 32px;
-      top: calc(50% - 16px);
+      left: 0.32rem;
+      top: calc(50% - 0.16rem);
     }
   }
 }

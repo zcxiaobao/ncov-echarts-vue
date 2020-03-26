@@ -1,6 +1,6 @@
 <template>
   <div class="layout-default">
-    <el-container style="height: 100%; border: 1px solid #eee">
+    <el-container style="height: 100%;">
       <el-header>
         <ncov-header></ncov-header>
       </el-header>
@@ -85,7 +85,7 @@ export default {
 }
 
 .el-header {
-  background: #f8f8f8;
+  // background: #f8f8f8;
   color: #999;
   width: 100%;
   font-size: 12px;

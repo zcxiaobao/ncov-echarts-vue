@@ -22,9 +22,14 @@ export default () => {
         label: {
           show: true,
           position: 'inside',
-          align: 'center'
+          align: 'center',
+          fontSize: '0.16rem'
         },
-        data: null
+        data: null,
+        top: '5%',
+        left: '8%',
+        bottom: '20%',
+        right: '5%'
       }
     ],
     visualMap: {
@@ -32,9 +37,13 @@ export default () => {
       type: 'piecewise', // 定义为分段型 visualMap
       min: 0,
       max: 100000,
-      itemWidth: 40,
-      bottom: 60,
-      left: 20
+      itemWidth: '0.15rem',
+      itemHeight: '0.10rem',
+      bottom: '0.10rem',
+      left: '0.20rem',
+      textStyle: {
+        fontSize: '0.20rem'
+      }
     }
   }
   return option
