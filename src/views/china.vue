@@ -71,9 +71,33 @@
             <base-map area="china" :mapData="mapData.chinaCurrent" class="map-container"></base-map>
           </el-carousel-item>
         </el-carousel>
-        <!-- <div style="height: 7.00rem">
-          <base-map area="china" :mapData="chinaMapData" class="map-container"></base-map>
-        </div>-->
+        <div class="city-ncov">
+          <h3 class="module-title">
+            城市疫情
+            <small>
+              累计确诊城市
+              <span class="total-city">{{cityStatis.confirm}}</span>
+            </small>
+          </h3>
+          <div class="content">
+            <div class="item zero">
+              <p class="num">{{cityStatis.zeroNowConfirm}}</p>
+              <p class="text">零病例城市</p>
+            </div>
+            <div class="progress">
+              <p :style="{width: cityStatis.zeroNowConfirm / cityStatis.confirm * 100 + '%'}"></p>
+            </div>
+            <div class="item has">
+              <p class="num">{{cityStatis.notZeroNowConfirm}}</p>
+              <p class="text">有病例城市</p>
+            </div>
+          </div>
+          <div class="summary">
+            全国累计确诊患者分布于
+            <span>{{cityStatis.confirm}}</span>个城市，目前已有
+            <span>{{cityStatis.confirm}}</span>个城市实现现有确诊“清零”
+          </div>
+        </div>
         <section class="line-chart-wrapper">
           <el-carousel height="6.00rem" :autoplay="false" arrow="always" indicator-position="none">
             <el-carousel-item>
@@ -157,10 +181,13 @@ import api from '@/api/api.js'
 import echarts from 'echarts'
 import { dataDetailEnum, countryEngName, ncovInfoLoc } from '@/assets/js/config'
 import { buildMapOptions } from '@/assets/js/map-option.js'
+import { getChinaDisease } from '@/api/china'
+import { SUCCESS } from '@/api/config'
 
 export default {
   data() {
     return {
+      cityStatis: {},
       chinaInfo: {
         confirm: { total: '-', today: '-' },
         suspect: { total: '-', today: '-' },
@@ -229,6 +256,12 @@ export default {
     }
   },
   created() {
+    getChinaDisease().then(({ ret, data }) => {
+      if (ret === SUCCESS) {
+        const d = JSON.parse(data)
+        this.cityStatis = d.cityStatis
+      }
+    })
     this._getNcovData()
     for (const loc in ncovInfoLoc) {
       this._getRegionTrendData(ncovInfoLoc[loc], loc)
@@ -487,6 +520,14 @@ export default {
       PingFang SC, Hiragino Sans GB, Microsoft YaHei UI, Microsoft YaHei, Arial;
     margin-top: 0.1rem;
     margin-bottom: 0.2rem;
+    small {
+      font: 0.22rem/0.6rem -apple-system-font, system-ui, -apple-system,
+        Segoe UI, Roboto, Ubuntu, Cantarell, Noto Sans, sans-serif,
+        Helvetica Neue, PingFang SC, Hiragino Sans GB, Microsoft YaHei UI,
+        Microsoft YaHei, Arial;
+      margin-top: 0.1rem;
+      margin-bottom: 0.2rem;
+    }
   }
   .sec-title {
     height: 0.94rem;
@@ -525,6 +566,68 @@ export default {
       width: 0.16rem;
       height: 0.16rem;
       background: #e10000;
+    }
+  }
+  .city-ncov {
+    .total-city {
+      color: #f23a3b;
+    }
+    .content {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      border-radius: 0.1rem;
+      background-color: #eef4ff;
+      height: 1.2rem;
+
+      .progress {
+        flex: 1;
+        height: 0.1rem;
+        background-color: #f06061;
+        border-radius: 0.1rem;
+        position: relative;
+        overflow: hidden;
+        margin: 0 0.05rem;
+        p {
+          border-right: 0.05rem solid #eef4ff;
+          width: 0;
+          background-color: #4dadff;
+          height: 100%;
+        }
+      }
+      .item {
+        flex: 0 0 25%;
+        .num {
+          font-size: 0.32rem;
+          line-height: 0.4rem;
+          height: 0.4rem;
+          font-weight: 500;
+        }
+        .text {
+          font-size: 0.24rem;
+          color: #000;
+          height: 0.28rem;
+          line-height: 0.28rem;
+          margin-top: 0.04rem;
+        }
+      }
+      .zero {
+        .num {
+          color: #4dadff;
+        }
+      }
+      .has {
+        .num {
+          color: #f23a3b;
+        }
+      }
+    }
+    .summary {
+      font-size: 0.24rem;
+      line-height: 0.32rem;
+      color: #a6a6a6;
+      margin: 0.1rem 0 0;
     }
   }
 }
