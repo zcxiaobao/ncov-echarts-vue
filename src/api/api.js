@@ -141,6 +141,25 @@ const api = {
       { _: `${+new Date()}` }
       // { prefix: 'Zepto', name: 'Zepto' + +new Date() }
     )
+  },
+  getQData() {
+    return jsonp(
+      'https://view.inews.qq.com/g2/getOnsInfo',
+      { _: `${+new Date()}`, name: 'disease_foreign' }
+      // { prefix: 'Zepto', name: 'Zepto' + +new Date() }
+    )
+  },
+  getLoctionLat() {
+    return jsonp(
+      'https://lspengine.map.sogou.com/locationip',
+      {
+        coord: 'mercator'
+      },
+      {
+        param: 'cb',
+        name: 'SGS.getLocate'
+      }
+    )
   }
 }
 export default api

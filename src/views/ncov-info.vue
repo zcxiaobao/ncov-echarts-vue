@@ -391,6 +391,12 @@ export default {
       this.$set(this.newsData, 'paperData', res.papers)
       this.$set(this.newsData, 'scrollNewData', res.scrollNews)
     })
+    // api.getQData().then(res => {
+    //   console.log(res)
+    // })
+    api.getLoctionLat().then(res => {
+      console.log(res)
+    })
   },
   methods: {
     infoTabToggle(tab) {
