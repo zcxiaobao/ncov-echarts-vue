@@ -71,7 +71,7 @@
             <base-map area="china" :mapData="mapData.chinaCurrent" class="map-container"></base-map>
           </el-carousel-item>
         </el-carousel>
-        <div class="city-ncov">
+        <section class="city-ncov">
           <h3 class="module-title">
             城市疫情
             <small>
@@ -97,7 +97,31 @@
             <span>{{cityStatis.confirm}}</span>个城市，目前已有
             <span>{{cityStatis.confirm}}</span>个城市实现现有确诊“清零”
           </div>
-        </div>
+        </section>
+        <section class="line-chart-wrapper">
+          <el-carousel height="6.00rem" :autoplay="false" arrow="always">
+            <el-carousel-item>
+              <h2 class="module-title">境外输入省市TOP10</h2>
+              <div class="line-item-wrap">
+                <bar-chart
+                  :textData="textData.importStatisText"
+                  :mapData="importStatis.TopList"
+                  class="line-item-wrap"
+                ></bar-chart>
+              </div>
+            </el-carousel-item>
+            <el-carousel-item>
+              <h2 class="module-title">境外新增输入趋势</h2>
+              <div class="line-item-wrap">
+                <line-chart
+                  :textData="textData.importAddStatisText"
+                  :mapData="importAddStatis"
+                  class="line-item-wrap"
+                ></line-chart>
+              </div>
+            </el-carousel-item>
+          </el-carousel>
+        </section>
         <section class="line-chart-wrapper">
           <el-carousel height="6.00rem" :autoplay="false" arrow="always" indicator-position="none">
             <el-carousel-item>
@@ -170,6 +194,7 @@
 import { mapGetters, mapMutations } from 'vuex'
 import Tab from '@/components/tab/tab'
 import DataDetail from '@/components/data-detail/data-detail'
+import BarChart from '@/components/echarts/bar'
 import TimelineWrap from '@/components/timeline-wrap'
 import MapInit from '@/components/map/map.vue'
 import LineChart from '@/components/echarts/line'
@@ -181,13 +206,18 @@ import api from '@/api/api.js'
 import echarts from 'echarts'
 import { dataDetailEnum, countryEngName, ncovInfoLoc } from '@/assets/js/config'
 import { buildMapOptions } from '@/assets/js/map-option.js'
-import { getChinaDisease } from '@/api/china'
+import { getChinaDisease, getForeignDisease } from '@/api/china'
 import { SUCCESS } from '@/api/config'
 
 export default {
   data() {
     return {
+      chinaData: {
+        cityStatis: {},
+        chinaDayAddList: {}
+      },
       cityStatis: {},
+      importStatis: {},
       chinaInfo: {
         confirm: { total: '-', today: '-' },
         suspect: { total: '-', today: '-' },
@@ -238,6 +268,12 @@ export default {
           legend: ['确诊', '治愈', '死亡'],
           color: ['#A31D13', '#58A97A', '#828282'],
           dimensions: ['date', 'confirm', 'heal', 'dead']
+        },
+        importStatisText: {
+          dimensions: ['province', 'importedCase']
+        },
+        importAddStatisText: {
+          dimensions: ['date', 'importedCase']
         }
       },
       // table渲染数据
@@ -260,6 +296,17 @@ export default {
       if (ret === SUCCESS) {
         const d = JSON.parse(data)
         this.cityStatis = d.cityStatis
+      }
+    })
+    getForeignDisease().then(({ ret, data }) => {
+      if (ret === SUCCESS) {
+        const d = JSON.parse(data)
+        this.$set(this.chinaData, 'chinaDayAddList', d.chinaDayAddList)
+        this.importAddStatis = this.chinaData.chinaDayAddList.filter(
+          d => d.importedCase > 0
+        )
+
+        this.importStatis = d.importStatis
       }
     })
     this._getNcovData()
@@ -403,7 +450,8 @@ export default {
     LineChart,
     TableData,
     BaseMap,
-    detailNewsCard
+    detailNewsCard,
+    BarChart
   }
 }
 </script>

@@ -4,7 +4,7 @@
  * @Author: zcxiaobao
  * @Date: 2020-03-20 13:35:48
  * @LastEditors: zcxiaobao
- * @LastEditTime: 2020-03-26 17:17:12
+ * @LastEditTime: 2020-03-31 17:35:40
  -->
 <template>
   <div class="china-map" id="china-map" ref="chart"></div>
@@ -95,7 +95,7 @@ export default {
   },
   watch: {
     mapData(newMapData) {
-      this.myChart.clear()
+      // this.myChart.clear()
       drawChart(this)
     }
   }

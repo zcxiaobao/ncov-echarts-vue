@@ -1,3 +1,11 @@
+/*
+ * @Descripttion:
+ * @version:
+ * @Author: zcxiaobao
+ * @Date: 2020-03-18 16:46:00
+ * @LastEditors: zcxiaobao
+ * @LastEditTime: 2020-03-31 17:35:03
+ */
 import echarts from 'echarts'
 import elementResizeDetectorMaker from 'element-resize-detector'
 const showLoadingObj = {
@@ -10,7 +18,6 @@ const showLoadingObj = {
 export const drawChart = async self => {
   self.myChart.showLoading('default', showLoadingObj)
   self.setOptionText()
-  // const resData = await self.seriesDataPromise
   if (!self.mapData) {
     return
   }
@@ -22,8 +29,6 @@ export const drawChart = async self => {
     if (self.mapData) {
       self.setSeriesData(self.mapData)
     }
-    // self.myChart.setOption(self.option)
-    // self.myChart.hideLoading()
   }
 }
 export const workflow = self => {

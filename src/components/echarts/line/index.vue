@@ -22,10 +22,6 @@ export default {
       type: Object,
       default: null
     },
-    // seriesDataPromise: {
-    //   type: Promise,
-    //   required: true
-    // },
     isTotal: {
       type: Boolean,
       default: true
