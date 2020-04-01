@@ -92,10 +92,10 @@
         <p class="map-title">中国疫情图</p>
         <el-carousel height="7.00rem" :autoplay="false" arrow="hover" indicator-position="none">
           <el-carousel-item>
-            <base-map area="china" :mapData="mapData.chinaTotal" class="map-container"></base-map>
+            <base-map area="china" :mapData="chinaCityConf" class="map-container"></base-map>
           </el-carousel-item>
           <el-carousel-item>
-            <base-map area="china" :mapData="mapData.chinaCurrent" class="map-container"></base-map>
+            <base-map area="china" :mapData="chinaCityNowConf" class="map-container"></base-map>
           </el-carousel-item>
         </el-carousel>
         <section class="city-ncov">
@@ -317,6 +317,8 @@ export default {
     return {
       chinaTotal: {},
       chinaAdd: {},
+      chinaCityConf: [],
+      chinaCityNowConf: [],
       lastUpdateTime: '',
       chinaData: {
         cityStatis: {},
@@ -418,7 +420,6 @@ export default {
     getChinaDisease().then(({ ret, data }) => {
       if (ret === SUCCESS) {
         const d = JSON.parse(data)
-        console.log(d)
         this.cityStatis = d.cityStatis
         this.$set(this.chinaData, 'chinaDayAddList', d.chinaDayAddList)
         this.$set(this.chinaData, 'chinaDayList', d.chinaDayList)
@@ -487,6 +488,22 @@ export default {
         this.chinaAdd = d.chinaAdd
         this.areaTree = d.areaTree[0].children
         this.lastUpdateTime = d.lastUpdateTime
+        this.chinaCityConf = d.areaTree[0].children.map(area => {
+          const { name, total } = area
+          return {
+            name,
+            value: total.confirm,
+            ...total
+          }
+        })
+        this.chinaCityNowConf = d.areaTree[0].children.map(area => {
+          const { name, total } = area
+          return {
+            name,
+            value: total.nowConfirm,
+            ...total
+          }
+        })
       }
     })
     getForeignDisease().then(({ ret, data }) => {

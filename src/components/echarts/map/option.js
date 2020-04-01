@@ -4,7 +4,7 @@
  * @Author: zcxiaobao
  * @Date: 2020-03-20 13:35:48
  * @LastEditors: zcxiaobao
- * @LastEditTime: 2020-03-26 17:11:20
+ * @LastEditTime: 2020-04-01 21:16:48
  */
 export default () => {
   const option = {
@@ -17,7 +17,7 @@ export default () => {
         }
         return `地区: ${params.name}
                 <br/>累计确诊: ${params.data.confirm}
-                <br/>现存确诊: ${params.data.current}
+                <br/>现存确诊: ${params.data.current || params.data.nowConfirm}
                 <br/>累计治愈: ${params.data.heal}
                 <br/>累计死亡: ${params.data.dead}`
       }

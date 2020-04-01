@@ -4,142 +4,136 @@
  * @Author: zcxiaobao
  * @Date: 2020-03-30 21:39:55
  * @LastEditors: zcxiaobao
- * @LastEditTime: 2020-03-30 21:47:13
+ * @LastEditTime: 2020-04-01 21:18:29
  -->
 <template>
   <el-row class="ncov">
     <!-- 世界疫情 -->
-    <section class="other-country-wrap">
-      <h2 class="sec-title">海外疫情</h2>
-      <section class="wrap">
-        <div class="info-detail">
-          <el-row type="flex" class="row-bg" justify="center">
-            <el-col :span="6">
-              <data-detail title="累计确诊" :data="otherCountryInfo.confirm" clsType="confirm"></data-detail>
-            </el-col>
-            <el-col :span="6">
-              <data-detail title="现存确诊" :data="otherCountryInfo.current" clsType="current"></data-detail>
-            </el-col>
-            <el-col :span="6">
-              <data-detail title="累计死亡" :data="otherCountryInfo.dead" clsType="dead"></data-detail>
-            </el-col>
-            <el-col :span="6">
-              <data-detail
-                title="累计治愈"
-                :data="otherCountryInfo.heal"
-                :isNeedBorder="false"
-                clsType="heal"
-              ></data-detail>
-            </el-col>
-          </el-row>
-          <el-row class="update-time">
-            <span class="time">截至2020-03-06</span>
-            <span class="explain">
-              <i class="el-icon-question"></i>数据说明
-            </span>
-          </el-row>
-        </div>
-        <section class="line-chart-wrapper">
-          <el-carousel height="7.00rem" :autoplay="false" arrow="always">
-            <el-carousel-item>
-              <p class="map-title">世界疫情图</p>
-              <base-map
-                :mapData="mapData.world"
-                area="world"
-                :showLabel="false"
-                class="map-container"
-              ></base-map>
-            </el-carousel-item>
-            <el-carousel-item>
-              <p class="map-title">意大利疫情图</p>
-              <base-map :mapData="mapData.italy" area="italy" class="map-container"></base-map>
-            </el-carousel-item>
-            <el-carousel-item>
-              <p class="map-title">韩国疫情图</p>
-              <base-map :mapData="mapData.korea" area="korea" class="map-container"></base-map>
-            </el-carousel-item>
-            <el-carousel-item>
-              <p class="map-title">伊朗疫情图</p>
-              <base-map :mapData="mapData.iran" area="iran" class="map-container"></base-map>
-            </el-carousel-item>
-            <el-carousel-item>
-              <p class="map-title">日本疫情图</p>
-              <base-map :mapData="mapData.japan" area="japan" class="map-container"></base-map>
-            </el-carousel-item>
-          </el-carousel>
-        </section>
-        <section class="line-chart-wrapper">
-          <el-carousel height="6.00rem" :autoplay="false" arrow="always">
-            <el-carousel-item>
-              <h3 class="module-title">意大利疫情趋势</h3>
-              <div class="line-item-wrap">
-                <line-chart
-                  :textData="textData.otherRegionText"
-                  :mapData="regionTrend.italy"
-                  class="line-item-wrap"
-                ></line-chart>
-              </div>
-            </el-carousel-item>
-            <el-carousel-item>
-              <h3 class="module-title">伊朗趋势</h3>
-              <div class="line-item-wrap">
-                <line-chart
-                  :textData="textData.otherRegionText"
-                  :mapData="regionTrend.iran"
-                  class="line-item-wrap"
-                ></line-chart>
-              </div>
-            </el-carousel-item>
-            <el-carousel-item>
-              <h3 class="module-title">韩国疫情趋势</h3>
-              <div class="line-item-wrap">
-                <line-chart
-                  :textData="textData.otherRegionText"
-                  :mapData="regionTrend.korea"
-                  class="line-item-wrap"
-                ></line-chart>
-              </div>
-            </el-carousel-item>
-            <el-carousel-item>
-              <h3 class="module-title">日本疫情趋势</h3>
-              <div class="line-item-wrap">
-                <line-chart
-                  :textData="textData.otherRegionText"
-                  :mapData="regionTrend.japan"
-                  class="line-item-wrap"
-                ></line-chart>
-              </div>
-            </el-carousel-item>
-          </el-carousel>
-        </section>
-        <section class="china-table">
-          <h3 class="module-title">海外病例</h3>
-          <table-data :tableData="tableData.world"></table-data>
-        </section>
+    <section class="wrap">
+      <div class="info-detail">
+        <el-tabs v-model="overseas" type="card">
+          <el-tab-pane label="海外疫情" name="overseas">
+            <el-row type="flex" class="row-bg" justify="center">
+              <el-col :span="6">
+                <detail-bar
+                  title="累计确诊"
+                  :total="globalStatis.confirm"
+                  :todayAdd="globalStatis.confirmAdd"
+                  clsType="confirm"
+                ></detail-bar>
+              </el-col>
+              <el-col :span="6">
+                <detail-bar
+                  title="现存确诊"
+                  :total="globalStatis.nowConfirm"
+                  :todayAdd="globalStatis.nowConfirmAdd"
+                  clsType="nowConfirm"
+                ></detail-bar>
+              </el-col>
+              <el-col :span="6">
+                <detail-bar
+                  title="累计死亡"
+                  :total="globalStatis.dead"
+                  :todayAdd="globalStatis.deadAdd"
+                  clsType="dead"
+                ></detail-bar>
+              </el-col>
+              <el-col :span="6">
+                <detail-bar
+                  title="累计治愈"
+                  :total="globalStatis.heal"
+                  :todayAdd="globalStatis.healAdd"
+                  :isNeedBorder="false"
+                  clsType="heal"
+                ></detail-bar>
+              </el-col>
+            </el-row>
+            <el-row class="update-time">
+              <span class="time">截至2020-03-06</span>
+              <span class="explain">
+                <i class="el-icon-question"></i>数据说明
+              </span>
+            </el-row>
+          </el-tab-pane>
+        </el-tabs>
+      </div>
+      <section class="line-chart-wrapper">
+        <el-carousel height="7.00rem" :autoplay="false" arrow="always">
+          <el-carousel-item>
+            <p class="map-title">世界疫情图</p>
+            <base-map
+              :mapData="mapData.world"
+              area="world"
+              :showLabel="false"
+              class="map-container"
+            ></base-map>
+          </el-carousel-item>
+          <el-carousel-item>
+            <p class="map-title">意大利疫情图</p>
+            <base-map :mapData="mapData.italy" area="italy" class="map-container"></base-map>
+          </el-carousel-item>
+          <el-carousel-item>
+            <p class="map-title">韩国疫情图</p>
+            <base-map :mapData="mapData.korea" area="korea" class="map-container"></base-map>
+          </el-carousel-item>
+          <el-carousel-item>
+            <p class="map-title">伊朗疫情图</p>
+            <base-map :mapData="mapData.iran" area="iran" class="map-container"></base-map>
+          </el-carousel-item>
+          <el-carousel-item>
+            <p class="map-title">日本疫情图</p>
+            <base-map :mapData="mapData.japan" area="japan" class="map-container"></base-map>
+          </el-carousel-item>
+        </el-carousel>
       </section>
-    </section>
-    <!-- 实时播报 -->
-    <section class="realtime wrap">
-      <h2 class="sec-title">实时播报</h2>
-      <div class="timeline-wrap">
-        <timeline-wrap :items="newsData.timelineData"></timeline-wrap>
-      </div>
-    </section>
-    <!-- 权威发布 -->
-    <section class="power-report wrap">
-      <h2 class="sec-title">权威报告</h2>
-      <ul>
-        <template v-for="(power,i) in newsData.powerData">
-          <power-card :power="power" :key="i"></power-card>
-        </template>
-      </ul>
-    </section>
-    <!-- 前沿知识 -->
-    <section class="paper wrap">
-      <h2 class="sec-title">前沿知识</h2>
-      <div class="timeline-wrap">
-        <timeline-wrap :items="newsData.paperData"></timeline-wrap>
-      </div>
+      <section class="line-chart-wrapper">
+        <el-carousel height="6.00rem" :autoplay="false" arrow="always">
+          <el-carousel-item>
+            <h3 class="module-title">意大利疫情趋势</h3>
+            <div class="line-item-wrap">
+              <line-chart
+                :textData="textData.otherRegionText"
+                :mapData="regionTrend.italy"
+                class="line-item-wrap"
+              ></line-chart>
+            </div>
+          </el-carousel-item>
+          <el-carousel-item>
+            <h3 class="module-title">伊朗趋势</h3>
+            <div class="line-item-wrap">
+              <line-chart
+                :textData="textData.otherRegionText"
+                :mapData="regionTrend.iran"
+                class="line-item-wrap"
+              ></line-chart>
+            </div>
+          </el-carousel-item>
+          <el-carousel-item>
+            <h3 class="module-title">韩国疫情趋势</h3>
+            <div class="line-item-wrap">
+              <line-chart
+                :textData="textData.otherRegionText"
+                :mapData="regionTrend.korea"
+                class="line-item-wrap"
+              ></line-chart>
+            </div>
+          </el-carousel-item>
+          <el-carousel-item>
+            <h3 class="module-title">日本疫情趋势</h3>
+            <div class="line-item-wrap">
+              <line-chart
+                :textData="textData.otherRegionText"
+                :mapData="regionTrend.japan"
+                class="line-item-wrap"
+              ></line-chart>
+            </div>
+          </el-carousel-item>
+        </el-carousel>
+      </section>
+      <section class="china-table">
+        <h3 class="module-title">海外病例</h3>
+        <table-data :tableData="tableData.world"></table-data>
+      </section>
     </section>
   </el-row>
 </template>
@@ -148,6 +142,7 @@
 import { mapGetters, mapMutations } from 'vuex'
 import Tab from '@/components/tab/tab'
 import DataDetail from '@/components/data-detail/data-detail'
+import DetailBar from '@/components/detail-bar'
 import TimelineWrap from '@/components/timeline-wrap'
 import MapInit from '@/components/map/map.vue'
 import LineChart from '@/components/echarts/line'
@@ -159,10 +154,14 @@ import api from '@/api/api.js'
 import echarts from 'echarts'
 import { dataDetailEnum, countryEngName, ncovInfoLoc } from '@/assets/js/config'
 import { buildMapOptions } from '@/assets/js/map-option.js'
+import { getForeignDisease } from '@/api/china'
+import { SUCCESS } from '@/api/config'
 
 export default {
   data() {
     return {
+      overseas: 'overseas',
+      globalStatis: {},
       chinaInfo: {
         confirm: { total: '-', today: '-' },
         suspect: { total: '-', today: '-' },
@@ -250,6 +249,13 @@ export default {
     }
   },
   created() {
+    getForeignDisease().then(({ ret, data }) => {
+      if (ret === SUCCESS) {
+        const d = JSON.parse(data)
+        console.log(d)
+        this.globalStatis = d.globalStatis
+      }
+    })
     this._getNcovData()
     for (const loc in ncovInfoLoc) {
       this._getRegionTrendData(ncovInfoLoc[loc], loc)
@@ -455,12 +461,11 @@ export default {
     }
   },
   components: {
-    DataDetail,
+    // DataDetail,
     LineChart,
     TableData,
     BaseMap,
-    TimelineWrap,
-    PowerCard
+    DetailBar
   }
 }
 </script>
@@ -517,9 +522,9 @@ export default {
       }
       .el-tabs__item {
         height: 0.8rem;
-        width: 50%;
+        width: 100%;
         color: #333;
-        text-align: center;
+        text-align: left;
         background: #f1f1f1;
         font: 0.26rem/0.8rem -apple-system-font, system-ui, -apple-system,
           Segoe UI, Roboto, Ubuntu, Cantarell, Noto Sans, sans-serif,
