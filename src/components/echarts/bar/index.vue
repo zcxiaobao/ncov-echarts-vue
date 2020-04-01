@@ -4,7 +4,7 @@
  * @Author: zcxiaobao
  * @Date: 2020-03-31 09:57:25
  * @LastEditors: zcxiaobao
- * @LastEditTime: 2020-03-31 20:24:41
+ * @LastEditTime: 2020-03-31 21:33:01
  -->
 <template>
   <div class="bar-item" id="bar-item" ref="chart"></div>
@@ -33,12 +33,7 @@ export default {
   },
   methods: {
     setOptionText() {
-      // this.option.legend.data = this.textData.legend
-      // this.option.color = this.textData.color
       this.option.dataset.dimensions = this.textData.dimensions
-    },
-    initXAxis(data) {
-      // this.option.xAxis.data = data.chinaDayList.map(d => d.date)
     },
     setOptionRem() {
       const { legend, xAxis, yAxis } = this.option

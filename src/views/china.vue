@@ -6,33 +6,60 @@
         <el-tab-pane label="全国疫情数据(含港澳台)" name="china">
           <el-row type="flex" class="row-bg" justify="center">
             <el-col :span="8">
-              <data-detail title="累计确诊" :data="chinaInfo.confirm" clsType="confirm"></data-detail>
+              <detail-bar
+                title="累计确诊"
+                :total="chinaTotal.confirm"
+                :todayAdd="chinaAdd.confirm"
+                clsType="confirm"
+              ></detail-bar>
             </el-col>
             <el-col :span="8">
-              <data-detail title="累计死亡" :data="chinaInfo.dead" clsType="dead"></data-detail>
+              <detail-bar
+                title="累计死亡"
+                :total="chinaTotal.dead"
+                :todayAdd="chinaAdd.dead"
+                clsType="dead"
+              ></detail-bar>
             </el-col>
             <el-col :span="8">
-              <data-detail title="累计治愈" :data="chinaInfo.heal" :isNeedBorder="false" clsType="heal"></data-detail>
+              <detail-bar
+                title="累计治愈"
+                :total="chinaTotal.heal"
+                :todayAdd="chinaAdd.heal"
+                :isNeedBorder="false"
+                clsType="heal"
+              ></detail-bar>
             </el-col>
           </el-row>
           <el-row type="flex" class="row-bg" justify="center">
             <el-col :span="8">
-              <data-detail title="现有确诊" :data="chinaInfo.current" clsType="current"></data-detail>
+              <detail-bar
+                title="现有确诊"
+                :total="chinaTotal.nowConfirm"
+                :todayAdd="chinaAdd.nowConfirm"
+                clsType="nowConfirm"
+              ></detail-bar>
             </el-col>
             <el-col :span="8">
-              <data-detail title="现有重症" :data="chinaInfo.severe" clsType="suspect"></data-detail>
+              <detail-bar
+                title="无症状感染"
+                :total="chinaTotal.noInfect"
+                :todayAdd="chinaAdd.noInfect"
+                clsType="noInfect"
+              ></detail-bar>
             </el-col>
             <el-col :span="8">
-              <data-detail
-                title="现有疑似"
-                :data="chinaInfo.suspect"
+              <detail-bar
+                title="境外输入"
+                :total="chinaTotal.importedCase"
+                :todayAdd="chinaAdd.importedCase"
                 :isNeedBorder="false"
-                clsType="severe"
-              ></data-detail>
+                clsType="importedCase"
+              ></detail-bar>
             </el-col>
           </el-row>
           <el-row class="update-time">
-            <span class="time">截至2020-03-06</span>
+            <span class="time">截至 {{lastUpdateTime}}</span>
             <span class="explain">
               <i class="el-icon-question"></i>数据说明
             </span>
@@ -95,7 +122,7 @@
           <div class="summary">
             全国累计确诊患者分布于
             <span>{{cityStatis.confirm}}</span>个城市，目前已有
-            <span>{{cityStatis.confirm}}</span>个城市实现现有确诊“清零”
+            <span>{{cityStatis.zeroNowConfirm}}</span>个城市实现现有确诊“清零”
           </div>
         </section>
         <section class="line-chart-wrapper">
@@ -113,11 +140,21 @@
             <el-carousel-item>
               <h2 class="module-title">境外新增输入趋势</h2>
               <div class="line-item-wrap">
-                <line-chart
+                <new-line-chart
                   :textData="textData.importAddStatisText"
                   :mapData="importAddStatis"
                   class="line-item-wrap"
-                ></line-chart>
+                ></new-line-chart>
+              </div>
+            </el-carousel-item>
+            <el-carousel-item>
+              <h2 class="module-title">境外新增输入趋势</h2>
+              <div class="line-item-wrap">
+                <new-line-chart
+                  :textData="textData.importAddStatisText"
+                  :mapData="importTotalStatis"
+                  class="line-item-wrap"
+                ></new-line-chart>
               </div>
             </el-carousel-item>
           </el-carousel>
@@ -126,47 +163,76 @@
           <el-carousel height="6.00rem" :autoplay="false" arrow="always" indicator-position="none">
             <el-carousel-item>
               <h3 class="module-title">全国疫情新增趋势</h3>
-              <line-chart
-                :isTotal="false"
+              <new-line-chart
                 :textData="textData.ncovAddText"
-                :mapData="ncovAllData"
+                :mapData="chinaData.chinaDayAddList"
                 class="line-item-wrap"
-              ></line-chart>
+              ></new-line-chart>
             </el-carousel-item>
             <el-carousel-item>
               <h3 class="module-title">全国确诊/疑似/重症趋势</h3>
-              <line-chart
+              <new-line-chart
                 :textData="textData.ncovTotalText"
-                :mapData="ncovAllData"
+                :mapData="chinaData.chinaDayList"
                 class="line-item-wrap"
-              ></line-chart>
+              ></new-line-chart>
             </el-carousel-item>
             <el-carousel-item>
               <h3 class="module-title">全国累计治愈/死亡趋势</h3>
-              <line-chart
+              <new-line-chart
                 :textData="textData.ncovHealDeadText"
-                :mapData="ncovAllData"
+                :mapData="chinaData.chinaDayList"
+                :isPercent="true"
                 class="line-item-wrap"
-              ></line-chart>
+              ></new-line-chart>
             </el-carousel-item>
           </el-carousel>
         </section>
         <section class="line-chart-wrapper">
           <el-carousel height="6.00rem" :autoplay="false" arrow="always">
             <el-carousel-item>
-              <h2 class="module-title">全国/湖北/非湖北累计确诊对比</h2>
+              <h2 class="module-title">湖北确诊/治愈/死亡趋势</h2>
               <div class="line-item-wrap">
-                <line-chart
-                  :isTotal="false"
-                  :isNeedAssist="true"
+                <new-line-chart
                   :textData="textData.regionTotalText"
-                  :mapData="ncovAllData"
-                  :assistData="regionTrend.hubei"
+                  :mapData="dailyTrend.hubei"
                   class="line-item-wrap"
-                ></line-chart>
+                ></new-line-chart>
               </div>
             </el-carousel-item>
             <el-carousel-item>
+              <h2 class="module-title">非湖北确诊/治愈/死亡趋势</h2>
+              <div class="line-item-wrap">
+                <new-line-chart
+                  :textData="textData.regionTotalText"
+                  :mapData="dailyTrend.notHubei"
+                  class="line-item-wrap"
+                ></new-line-chart>
+              </div>
+            </el-carousel-item>
+            <el-carousel-item>
+              <h2 class="module-title">湖北内外治愈率对比</h2>
+              <div class="line-item-wrap">
+                <new-line-chart
+                  :textData="textData.rateCompareText"
+                  :mapData="dailyTrend.healRateDaily"
+                  :isPercent="true"
+                  class="line-item-wrap"
+                ></new-line-chart>
+              </div>
+            </el-carousel-item>
+            <el-carousel-item>
+              <h2 class="module-title">湖北内外病死率对比</h2>
+              <div class="line-item-wrap">
+                <new-line-chart
+                  :textData="textData.rateCompareText"
+                  :mapData="dailyTrend.deadRateDaily"
+                  :isPercent="true"
+                  class="line-item-wrap"
+                ></new-line-chart>
+              </div>
+            </el-carousel-item>
+            <!-- <el-carousel-item>
               <h2 class="module-title">全国/湖北/非湖北新增确诊对比</h2>
               <div class="line-item-wrap">
                 <line-chart
@@ -178,12 +244,46 @@
                   class="line-item-wrap"
                 ></line-chart>
               </div>
+            </el-carousel-item>-->
+          </el-carousel>
+        </section>
+        <section class="line-chart-wrapper">
+          <el-carousel height="6.00rem" :autoplay="false" arrow="always">
+            <el-carousel-item>
+              <h2 class="module-title">武汉新增确诊趋势</h2>
+              <div class="line-item-wrap">
+                <new-line-chart
+                  :textData="textData.wuhanAddText"
+                  :mapData="dailyTrend.wuhan"
+                  class="line-item-wrap"
+                ></new-line-chart>
+              </div>
+            </el-carousel-item>
+            <el-carousel-item>
+              <h2 class="module-title">湖北(非武汉)新增确诊趋势</h2>
+              <div class="line-item-wrap">
+                <new-line-chart
+                  :textData="textData.wuhanAddText"
+                  :mapData="dailyTrend.notWuhan"
+                  class="line-item-wrap"
+                ></new-line-chart>
+              </div>
+            </el-carousel-item>
+            <el-carousel-item>
+              <h2 class="module-title">全国(非湖北)新增确诊趋势</h2>
+              <div class="line-item-wrap">
+                <new-line-chart
+                  :textData="textData.wuhanAddText"
+                  :mapData="dailyTrend.notHubeiAdd"
+                  class="line-item-wrap"
+                ></new-line-chart>
+              </div>
             </el-carousel-item>
           </el-carousel>
         </section>
         <section class="china-table">
           <h3 class="module-title">中国病例</h3>
-          <table-data :tableData="tableData.china"></table-data>
+          <table-list :tableData="areaTree"></table-list>
         </section>
       </div>
     </section>
@@ -193,12 +293,11 @@
 <script>
 import { mapGetters, mapMutations } from 'vuex'
 import Tab from '@/components/tab/tab'
-import DataDetail from '@/components/data-detail/data-detail'
+import TableList from '@/components/table-list'
+import DetailBar from '@/components/detail-bar'
 import BarChart from '@/components/echarts/bar'
 import TimelineWrap from '@/components/timeline-wrap'
-import MapInit from '@/components/map/map.vue'
-import LineChart from '@/components/echarts/line'
-import TableData from '@/components/table-data'
+import NewLineChart from '@/components/echarts/new-line'
 import BaseMap from '@/components/echarts/map/map'
 import PowerCard from '@/components/power-card'
 import detailNewsCard from '@/components/detail-news-card'
@@ -206,18 +305,44 @@ import api from '@/api/api.js'
 import echarts from 'echarts'
 import { dataDetailEnum, countryEngName, ncovInfoLoc } from '@/assets/js/config'
 import { buildMapOptions } from '@/assets/js/map-option.js'
-import { getChinaDisease, getForeignDisease } from '@/api/china'
+import {
+  getChinaDisease,
+  getForeignDisease,
+  getChinaDiseaseH5
+} from '@/api/china'
 import { SUCCESS } from '@/api/config'
 
 export default {
   data() {
     return {
+      chinaTotal: {},
+      chinaAdd: {},
+      lastUpdateTime: '',
       chinaData: {
         cityStatis: {},
-        chinaDayAddList: {}
+        chinaDayAddList: [],
+        chinaDayList: [],
+        dailyHistory: []
+      },
+      areaTree: [],
+      dailyTrend: {
+        hubei: [],
+        notHubei: [],
+        healRateDaily: [],
+        deadRateDaily: [],
+        wuhan: [],
+        notWuhan: [],
+        notHubeiAdd: []
+      },
+      importData: {
+        importStatis: {},
+        importAddStatis: [],
+        importTotalStatis: []
       },
       cityStatis: {},
       importStatis: {},
+      importAddStatis: [],
+      importTotalStatis: [],
       chinaInfo: {
         confirm: { total: '-', today: '-' },
         suspect: { total: '-', today: '-' },
@@ -242,27 +367,22 @@ export default {
         ncovTotalText: {
           legend: ['累计确诊', '现有确诊', '现有疑似', '现有重症'],
           color: ['#A31D13', '#E44A3D', '#FFD667', '#791618'],
-          dimensions: ['date', 'confirm', 'current', 'suspect', 'severe']
+          dimensions: ['date', 'confirm', 'nowConfirm', 'suspect', 'nowSevere']
         },
         ncovHealDeadText: {
-          legend: ['累计治愈', '累计死亡'],
+          legend: ['治愈率', '死亡率'],
           color: ['#58A97A', '#828282'],
-          dimensions: ['date', 'heal', 'dead']
+          dimensions: ['date', 'healRate', 'deadRate']
         },
         regionTotalText: {
-          legend: ['全国', '湖北', '非湖北'],
-          color: ['#C13531', '#2F4554', '#61A0A8'],
-          dimensions: ['date', 'chinaConfirm', 'huConfirm', 'otherConfirm']
+          legend: ['现有确诊', '现有治愈', '现有死亡'],
+          color: ['#E44A3D', '#58A97A', '#828282'],
+          dimensions: ['date', 'nowConfirm', 'heal', 'dead']
         },
-        regionAddText: {
+        rateCompareText: {
           legend: ['全国', '湖北', '非湖北'],
-          color: ['#C13531', '#2F4554', '#61A0A8'],
-          dimensions: [
-            'date',
-            'chinaAddConfirm',
-            'huAddConfirm',
-            'otherAddConfirm'
-          ]
+          color: ['#E44A3D', '#58A97A', '#828282'],
+          dimensions: ['date', 'country', 'hubei', 'notHubei']
         },
         otherRegionText: {
           legend: ['确诊', '治愈', '死亡'],
@@ -274,6 +394,9 @@ export default {
         },
         importAddStatisText: {
           dimensions: ['date', 'importedCase']
+        },
+        wuhanAddText: {
+          dimensions: ['date', 'confirmAdd']
         }
       },
       // table渲染数据
@@ -295,17 +418,80 @@ export default {
     getChinaDisease().then(({ ret, data }) => {
       if (ret === SUCCESS) {
         const d = JSON.parse(data)
+        console.log(d)
         this.cityStatis = d.cityStatis
+        this.$set(this.chinaData, 'chinaDayAddList', d.chinaDayAddList)
+        this.$set(this.chinaData, 'chinaDayList', d.chinaDayList)
+        this.$set(this.chinaData, 'dailyHistory', d.dailyHistory)
+        this.$set(
+          this.dailyTrend,
+          'hubei',
+          this.chinaData.dailyHistory.map(d => ({
+            date: d.date,
+            ...d.hubei
+          }))
+        )
+        this.$set(
+          this.dailyTrend,
+          'notHubei',
+          this.chinaData.dailyHistory.map(d => ({
+            date: d.date,
+            ...d.notHubei
+          }))
+        )
+        this.$set(
+          this.dailyTrend,
+          'healRateDaily',
+          this.chinaData.dailyHistory.map(d => ({
+            date: d.date,
+            hubei: d.hubei.healRate,
+            notHubei: d.notHubei.healRate,
+            country: d.country.healRate
+          }))
+        )
+        this.$set(
+          this.dailyTrend,
+          'deadRateDaily',
+          this.chinaData.dailyHistory.map(d => ({
+            date: d.date,
+            hubei: d.hubei.deadRate,
+            notHubei: d.notHubei.deadRate,
+            country: d.country.deadRate
+          }))
+        )
+        this.$set(
+          this.dailyTrend,
+          'wuhan',
+          d.wuhanDayList.map(day => ({ date: day.date, ...day.wuhan }))
+        )
+        this.$set(
+          this.dailyTrend,
+          'notWuhan',
+          d.wuhanDayList.map(day => ({ date: day.date, ...day.notWuhan }))
+        )
+        this.$set(
+          this.dailyTrend,
+          'notHubeiAdd',
+          d.wuhanDayList.map(day => ({ date: day.date, ...day.notHubei }))
+        )
+        this.importAddStatis = this.chinaData.chinaDayAddList.filter(
+          d => d.importedCase > 0
+        )
+        this._calcImportTotal(this.chinaData.chinaDayAddList)
+      }
+    })
+    getChinaDiseaseH5().then(({ ret, data }) => {
+      if (ret === SUCCESS) {
+        const d = JSON.parse(data)
+        this.chinaTotal = d.chinaTotal
+        this.chinaAdd = d.chinaAdd
+        this.areaTree = d.areaTree[0].children
+        this.lastUpdateTime = d.lastUpdateTime
       }
     })
     getForeignDisease().then(({ ret, data }) => {
       if (ret === SUCCESS) {
         const d = JSON.parse(data)
-        this.$set(this.chinaData, 'chinaDayAddList', d.chinaDayAddList)
-        this.importAddStatis = this.chinaData.chinaDayAddList.filter(
-          d => d.importedCase > 0
-        )
-
         this.importStatis = d.importStatis
       }
     })
@@ -328,6 +514,19 @@ export default {
           this.$set(this.newsData, 'timelineData', data.items.slice(0, 15))
         }
       })
+    },
+    _calcImportTotal(list) {
+      const index = list.findIndex(d => d.importedCase > 0)
+      const len = list.length
+      const res = []
+      let sumImport = 0
+      if (index !== -1) {
+        for (let i = index; i < len; i++) {
+          sumImport += list[i].importedCase
+          res.push({ date: list[i].date, importedCase: sumImport })
+        }
+      }
+      this.importTotalStatis = res
     },
 
     /**
@@ -446,12 +645,13 @@ export default {
     }
   },
   components: {
-    DataDetail,
-    LineChart,
-    TableData,
+    DetailBar,
+    // TableData,
+    TableList,
     BaseMap,
     detailNewsCard,
-    BarChart
+    BarChart,
+    NewLineChart
   }
 }
 </script>

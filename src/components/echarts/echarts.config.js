@@ -4,7 +4,7 @@
  * @Author: zcxiaobao
  * @Date: 2020-03-18 16:46:00
  * @LastEditors: zcxiaobao
- * @LastEditTime: 2020-03-31 17:35:03
+ * @LastEditTime: 2020-03-31 20:51:25
  */
 import echarts from 'echarts'
 import elementResizeDetectorMaker from 'element-resize-detector'
@@ -34,6 +34,26 @@ export const drawChart = async self => {
 export const workflow = self => {
   self.myChart = echarts.init(self.$refs.chart)
   drawChart(self)
+  window.addEventListener('resize', () => self.myChart.resize())
+  elementResizeDetectorMaker().listenTo(self.$refs.chart, () =>
+    self.myChart.resize()
+  )
+}
+
+export const drawChart2 = async self => {
+  self.myChart.showLoading('default', showLoadingObj)
+  self.setOptionText()
+  if (
+    !self.mapData ||
+    (Array.isArray(self.mapData) && self.mapData.length < 1)
+  ) {
+    return
+  }
+  self.setSeriesData(self.mapData)
+}
+export const workflow2 = self => {
+  self.myChart = echarts.init(self.$refs.chart)
+  drawChart2(self)
   window.addEventListener('resize', () => self.myChart.resize())
   elementResizeDetectorMaker().listenTo(self.$refs.chart, () =>
     self.myChart.resize()
